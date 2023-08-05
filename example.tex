@@ -1,0 +1,84 @@
+% Read the PDF documentation for all parameters
+\documentclass[a4paper, 11pt, colorlinks]{academiccv}
+
+\begin{document}
+
+  \makecvtitle{
+    author = John Who,
+    position = Doctor,
+    photo = photo,
+    affiliations = {Secret Inc., Can't Tell},
+    email = john.who@secret.com,
+    email = john@canttell.anyone,
+    website = john.who.me,
+    github = JohnWho,
+    orcid = 0000-0000-0000-0000,
+    linkedIn = JohnWho,
+    street = {Unknown Street, 1},
+    zipcode = 987654,
+    city = Middle,
+    country = Nowhere,
+  }
+
+  \titleSetup{
+    author = {\itshape\small},
+    position = {\bfseries\Large},
+    affiliations = {\scshape\color{blue}},
+    address = {\ttfamily},
+    city = {\scshape\Large},
+    country = {\normalfont of\ }, % Can be used to add some visible tokens, too!
+    linkedIn = {\color{blue}}, % Order is important! The next line overwrites this one
+    links = {\color{green}}, % To change link colors, use hyperref commands
+    github = {\color{black}},
+    date = {}, % Disable showing "last update" message
+    vertical-space = {2em},
+    portion-photo = {.1},
+  }
+
+  \makecvtitle{
+    author = John Who,
+    position = Doctor,
+    photo = photo,
+    affiliations = {Secret Inc., Can't Tell},
+    email = john.who@secret.com,
+    email = john@canttell.anyone,
+    website = john.who.me,
+    github = JohnWho,
+    orcid = 0000-0000-0000-0000,
+    linkedIn = JohnWho,
+    street = {Unknown Street, 1},
+    zipcode = 987654,
+    city = Middle,
+    country = Nowhere,
+  }
+
+  \section{Publications}
+
+  \publication{
+    title = {Am I a Good Man?},
+    authors = {John Who, P.C.},
+    reference = {WC23},
+    where = {Dreaming Inside, Youth edition},
+    shortWhere = {DIY},
+    year = {2019},
+    doi = {00.0000/000-0-000-00000-00},
+    arxiv = {00.00000/arXiv.0000.00000},
+  }
+
+  % It is possible to change the setup in the middle of the document.
+  % The changes will only impact *all* the publications that come after
+  \publicationSetup{
+    title = {\itshape\large},
+    authors = {\scshape},
+    year = {\bfseries},
+    doi = {\ttfamily}
+  }
+
+  \publication{
+    title = {Oh, brilliant!},
+    authors = {John Who},
+    year = {2954},
+    doi-prefix = {Link:\ },
+    doi = {00.0000/000-0-000-00000-00},
+  }
+\end{document}

@@ -1,0 +1,271 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2023 by Gaëtan Staquet
+% -----------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{\jobname.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}
+%<package>\ProvidesExplPackage{academiccv-title}{2023/08/16}{v1.0}{Academic curriculum vitae: title header}
+
+\ExplSyntaxOn
+
+% \begin{macro}{\titleSetup}
+%    \begin{macrocode}
+\tl_new:N \l_title_authorStyle_tl
+\tl_new:N \l_title_positionStyle_tl
+\tl_new:N \l_title_affiliationsStyle_tl
+\tl_new:N \l_title_streetStyle_tl
+\tl_new:N \l_title_zipcodeStyle_tl
+\tl_new:N \l_title_cityStyle_tl
+\tl_new:N \l_title_countryStyle_tl
+\tl_new:N \l_title_emailStyle_tl
+\tl_new:N \l_title_websiteStyle_tl
+\tl_new:N \l_title_githubStyle_tl
+\tl_new:N \l_title_orcidStyle_tl
+
+\tl_new:N \l_title_dateStyle_tl
+
+\skip_new:N \l_title_vspace_skip
+\fp_new:N \l_title_portionForPhoto_fp
+
+\keys_define:nn   {titleStyle} {
+  author          .tl_set:N = \l_title_authorStyle_tl,
+  author          .initial:n = {\Huge\bfseries},
+  position        .tl_set:N = \l_title_positionStyle_tl,
+  position        .initial:n = {\itshape},
+  affiliations    .tl_set:N = \l_title_affiliationsStyle_tl,
+  affiliations    .initial:n = {\small},
+
+  address         .code:n = { % Easy way of defining each part at once
+    \tl_set:Nn \l_title_streetStyle_tl {#1}
+    \tl_set:Nn \l_title_zipCodeStyle_tl {#1}
+    \tl_set:Nn \l_title_cityStyle_tl {#1}
+    \tl_set:Nn \l_title_countryStyle_tl {#1}
+  },
+  street          .tl_set:N = \l_title_streetStyle_tl,
+  street          .initial:n = {\small},
+  zipcode         .tl_set:N = \l_title_zipcodeStyle_tl,
+  zipcode         .initial:n = {\small},
+  city            .tl_set:N = \l_title_cityStyle_tl,
+  city            .initial:n = {\small},
+  country         .tl_set:N = \l_title_countryStyle_tl,
+  country         .initial:n = {\small},
+
+  links           .code:n = {
+    \tl_set:Nn \l_title_emailStyle_tl {#1}
+    \tl_set:Nn \l_title_websiteStyle_tl {#1}
+    \tl_set:Nn \l_title_githubStyle_tl {#1}
+    \tl_set:Nn \l_title_orcidStyle_tl {#1}
+    \tl_set:Nn \l_title_linkedInStyle_tl {#1}
+  },
+  email           .tl_set:N = \l_title_emailStyle_tl,
+  email           .initial:n = {\small},
+  website         .tl_set:N = \l_title_websiteStyle_tl,
+  website         .initial:n = {\small},
+  github          .tl_set:N = \l_title_githubStyle_tl,
+  github          .initial:n = {\small},
+  orcid           .tl_set:N = \l_title_orcidStyle_tl,
+  orcid           .initial:n = {\small},
+  linkedIn        .tl_set:N = \l_title_linkedInStyle_tl,
+  linkedIn        .initial:n = {\small},
+
+  date            .tl_set:N = \l_title_dateStyle_tl,
+  date            .initial:n = {\footnotesize},
+
+  vertical-space  .skip_set:N = \l_title_vspace_skip,
+  vertical-space  .initial:n = {1em},
+  portion-photo   .fp_set:N = \l_title_portionForPhoto_fp,
+  portion-photo   .initial:n = {.25},
+}
+\NewDocumentCommand{\titleSetup}{m}{
+  \keys_set:nn {titleStyle} {#1}
+}
+%    \end{macrocode}
+% \end{macro}
+
+% Data
+% \begin{macro}{\makecvtitle}
+%    \begin{macrocode}
+\tl_new:N \l_title_author_tl
+\tl_new:N \l_title_position_tl
+\tl_new:N \l_title_affiliations_tl
+\tl_new:N \l_title_photo_tl
+\clist_new:N \l_title_email_clist
+\tl_new:N \l_title_website_tl
+\tl_new:N \l_title_github_tl
+\tl_new:N \l_title_orcid_tl
+\tl_new:N \l_title_linkedIn_tl
+\tl_new:N \l_title_street_tl
+\tl_new:N \l_title_zipcode_tl
+\tl_new:N \l_title_city_tl
+\tl_new:N \l_title_country_tl
+
+\keys_define:nn {title}{
+  author          .tl_set:N = \l_title_author_tl,
+  position        .tl_set:N = \l_title_position_tl,
+  affiliations    .tl_set:N = \l_title_affiliations_tl,
+  photo           .tl_set:N = \l_title_photo_tl,
+  email           .code:n = {
+    \clist_put_right:Nn \l_title_email_clist {#1}
+  },
+  website         .tl_set:N = \l_title_website_tl,
+  github          .tl_set:N = \l_title_github_tl,
+  orcid           .tl_set:N = \l_title_orcid_tl,
+  linkedIn        .tl_set:N = \l_title_linkedIn_tl,
+
+  street          .tl_set:N = \l_title_street_tl,
+  zipcode         .tl_set:N = \l_title_zipcode_tl,
+  city            .tl_set:N = \l_title_city_tl,
+  country         .tl_set:N = \l_title_country_tl,
+}
+
+\fp_new:N \l_title_sizePhoto_fp
+\dim_new:N \l_title_sizePhoto_dim
+\fp_new:N \l_title_sizeText_fp
+\dim_new:N \l_title_sizeText_dim
+\msg_new:nnn {academiccv} {title / emptyAuthor}
+  { Title:~the~author~can~not~be~empty. }
+\NewDocumentCommand{\makecvtitle}{m}{
+  % Resetting fields
+  \tl_set_eq:NN \l_title_author_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_position_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_affiliations_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_photo_tl \c_empty_tl
+  \clist_set_eq:NN \l_title_email_clist \c_empty_clist
+  \tl_set_eq:NN \l_title_website_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_github_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_orcid_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_linkedIn_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_street_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_zipcode_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_city_tl \c_empty_tl
+  \tl_set_eq:NN \l_title_country_tl \c_empty_tl
+
+  % Parsing arguments
+  \keys_set:nn {title} {#1}
+
+  \ifemptyTF{title}{author}{
+    \msg_fatal:nn {academiccv} {title / emptyAuthor}
+  }{}
+
+  % Setting metadata
+  \hypersetup {
+    pdfauthor = \l_title_author_tl,
+    pdftitle = Academic\ CV\ of\ \l_title_author_tl,
+  }
+
+  \fp_set:Nn \l_title_sizePhoto_fp {\l_title_portionForPhoto_fp * \dim_to_fp:n \linewidth}
+  \fp_set:Nn \l_title_sizeText_fp {\dim_to_fp:n \linewidth - \l_title_sizePhoto_fp - 15pt}
+
+  \dim_set:Nn \l_title_sizePhoto_dim {\fp_to_dim:N \l_title_sizePhoto_fp}
+  \dim_set:Nn \l_title_sizeText_dim {\fp_to_dim:N \l_title_sizeText_fp}
+
+  \formatcvtitle
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\formatAddress}
+%    \begin{macrocode}
+\NewDocumentCommand{\formatAddress}{}{
+  \print{title}{street}[,] ~
+  \print{title}{zipcode} ~
+  \print{title}{city}[,] ~
+  \print{title}{country}
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\formatEmail}
+%    \begin{macrocode}
+\tl_new:N \l_email_tl
+\NewDocumentCommand{\formatEmail}{m}{
+  \tl_set:Nn \l_email_tl {#1}
+  {
+    \l_title_emailStyle_tl
+    {
+      \faEnvelope[regular]\ \formatURL{mailto\c_colon_str}{l_email_tl}\\
+    }
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\formatEmails}
+%    \begin{macrocode}
+\NewDocumentCommand{\formatEmails}{}{
+  \clist_map_function:NN \l_title_email_clist \formatEmail
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\formatLinks}
+%    \begin{macrocode}
+\NewDocumentCommand{\formatLinks}{}{
+  \formatEmails
+  \printURL[\faHome\ ]{title}{website}{https\c_colon_str//}[\\]
+  \printURL[\faGithub\ ]{title}{github}{https\c_colon_str//github.com/}[\\]
+  \printURL[\faOrcid\ ]{title}{orcid}{https\c_colon_str//orcid.org/}[\\]
+  \printURL[\faLinkedin\ ]{title}{linkedIn}{https\c_colon_str//www.linkedin.com/in/}[\\]
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\updatedMessage, \showUpdated}
+%    \begin{macrocode}
+\NewDocumentCommand{\updatedMessage}{}{Last~updated~on~\today.}
+\NewDocumentCommand{\showUpdated}{}{
+  \begin{center}
+    \tl_if_empty:NTF \l_title_dateStyle_tl {}{
+      {
+        \l_title_dateStyle_tl
+        \updatedMessage
+      }
+    }
+  \end{center}
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\formatcvtitle}
+%    \begin{macrocode}
+\NewDocumentCommand{\formatcvtitle}{}{
+  \begin{minipage}{\l_title_sizeText_dim}
+    \begin{center}
+      \print{title}{author}
+      \useVSpace{title}{vspace}
+      \print{title}{position}
+      \useVSpace{title}{vspace}[-.5em]
+      \print{title}{affiliations}
+    \end{center}
+
+    \formatAddress\\
+    \formatLinks
+  \end{minipage}
+  \hfill
+  \begin{minipage}[c]{\l_title_sizePhoto_dim}
+    \strut{\vspace*{-\baselineskip}}\newline
+    \includegraphics[width=\textwidth, keepaspectratio]{\l_title_photo_tl}
+
+    \showUpdated
+  \end{minipage}
+}
+%    \end{macrocode}
+% \end{macro}
+
+\ExplSyntaxOff

@@ -1,0 +1,601 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2023 by Gaëtan Staquet
+% -----------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{\jobname.dtx}
+%</driver>
+%<class>\NeedsTeXFormat{LaTeX2e}
+%<class>\ProvidesExplClass{academiccv}{2023/08/10}{v0.2}{Academic curriculum vitae document class}
+%
+%<class>\LoadClass{article} % TODO: remove once everything is defined
+%<class>\RequirePackage{etoolbox}
+%<class>\RequirePackage{xparse}
+%<class>\RequirePackage{xspace}
+%<class>\RequirePackage[unicode]{hyperref}
+%<class>\RequirePackage{graphicx}
+%<class>\RequirePackage[usenames, dvipsnames, svgnames, x11names]{xcolor}
+%<class>\RequirePackage{fontawesome5}
+%
+%<class>\RequirePackage{academiccv-title}
+%<class>\RequirePackage{academiccv-publication}
+%
+%<*driver>
+\documentclass[a4paper]{l3doc}
+\usepackage{xparse}
+\usepackage{expl3}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{csquotes}
+\usepackage{fontawesome5}
+\begin{document}
+  \DisableImplementation
+  \DocInput{\jobname.dtx}
+\end{document}
+%</driver>
+% \fi
+%
+% \GetFileInfo{\jobname.dtx}
+%
+% \title{The \textsf{academiccv} class}
+% \author{Gaëtan Staquet}
+%
+% \maketitle
+%
+% \begin{documentation}
+%
+% \begin{abstract}
+%   Put text here.
+% \end{abstract}
+%
+% \tableofcontents
+%
+% \section{Introduction}
+%
+% Put text here.
+%
+% Written in Expl3, and uses the variable type.
+% In particular, a token list can be any sequence of characters and \LaTeX commands.
+% For instance, \verb!{Gaëtan Staquet}! and \verb!{Gaëtan \and Staquet}! are both
+% valid token lists.
+%
+% Define module.
+%
+% \section{Typesetting tools}
+%
+% We start with functions that can be used to easily typeset fields of a given
+% type defined by the modules, while automatically using the appropriate styles.
+% They are heavily used in the commands and environments of the following sections.
+% We highly recommend relying on these functions when redefining these commands
+% and environments, or even defining yours.
+% By default, the field types in the functions are \verb!tl! (token lists).
+% The exact names and types of the available variables are described in the
+% documentation of each module.
+%
+% \begin{function}{\useVSpace}
+%   \begin{syntax}
+%     \cs{useVSpace} \marg{module} \marg{field} \oarg{add}
+%   \end{syntax}
+% Retrieves the variable \meta{field} from \meta{module} holding a \enquote{skip}
+% value.
+% It then adds \meta{add}, and creates a vertical space of the resulting size.
+%
+% The default value of \meta{add} is \verb!0pt!.
+% \end{function}
+%
+% \begin{function}{\formatURL}
+%   \begin{syntax}
+%     \cs{formatURL} \marg{prefix} \marg{suffix}
+%   \end{syntax}
+% Creates a link by concatenating \meta{prefix} and the contents of the variable
+% named \meta{suffix} while outputting only the contents of \meta{suffix}.
+% \end{function}
+%
+% \begin{function}{\ifemptyTF}
+%   \begin{syntax}
+%     \cs{ifemptyTF} \marg{module} \marg{field} \oarg{field type} \marg{true} \marg{false}
+%   \end{syntax}
+% Test if the variable \meta{field} of \meta{module} is empty of type
+% \meta{field type}.
+% If it is empty, it executes \meta{true}, otherwise, \meta{false}.
+% \end{function}
+%
+% \begin{function}{\print}
+%   \begin{syntax}
+%     \cs{print} \oarg{prefix} \marg{module} \marg{field} \oarg{suffix} \oarg{field type}
+%   \end{syntax}
+%   Prints the value stored in the variable for \meta{field} of \meta{module}
+%   and of type \meta{field type}, using the appropriate formatting style.
+%   
+%   If the variable is empty, prints nothing.
+% \end{function}
+%
+% \begin{function}{\printURL}
+%   \begin{syntax}
+%     \cs{printURL} \oarg{prefix} \marg{module} \marg{field} \marg{URL prefix} \oarg{suffix} \oarg{field type}
+%   \end{syntax}
+%   Similar to \cs{print} but calls \cs{formatURL} with \meta{URL prefix} and
+% the contents of the variable.
+% \end{function}
+%
+% \section{The \enquote{title} module}
+%
+% The title produced by the \verb!academiccv! class contains multiple fields,
+% such as the name, current affiliation(s) and position, email address(es),
+% links to a personnal website, etc.
+% To configure the values that must appear and typeset the title, simply use
+% the following command.
+%
+% \begin{function}{\makecvtitle}
+%   \begin{syntax}
+%     \cs{makecvtitle} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:makecvtitle}.
+% By default, all values are empty and, thus, not displayed.
+%
+% This function also sets up the author and title metadata. If you desire to
+% modify this, call \cs{hypersetup} of package \verb!hyperref! after \cs{makecvtitle}.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l p{160pt} r}
+% \toprule
+% Key & Value type & Details & Required\\
+% \midrule
+% \verb!author! & Token list & The author of the CV & Yes\\
+% \verb!position! & Token list & The current position of the author & No\\
+% \verb!affiliations! & Token list & The current affiliations of the author & No\\
+% \verb!photo! & Token list & The path to the portrait file to display. Can be omitted but horizontal space will still be reserved (i.e., the result will be ugly), if you do not modify the corresponding style (see \cs{titleSetup}) & No\\
+% \verb!email! & Token list & One email address. Can be present multiple times and all addresses will be accumulated. & No\\
+% \verb!website! & Token list & URL (without \verb!https://!) to the author's website & No\\
+% \verb!github! & Token list & GitHub's \textbf{username} & No\\
+% \verb!orcid! & Token list & ORCID \textbf{number} & No\\
+% \verb!linkedIn! & Token list & LinkedIn \textbf{id} & No\\
+% \verb!street! & Token list & Office's street and number & No\\
+% \verb!zipcode! & Token list & Office's zipcode & No\\
+% \verb!city! & Token list & Office's city & No\\
+% \verb!country! & Token list & Office's country & No\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{makecvtitle}.}%
+% \label{tab:makecvtitle}
+% \end{table}
+%
+% Styles can be changed with the following command.
+%
+% \begin{function}{\titleSetup}
+%   \begin{syntax}
+%     \cs{titleSetup} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:titleSetup}.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l p{45pt} p{134pt} r}
+% \toprule
+% Key & Value type & Details & Default value\\
+% \midrule
+% \verb!author! & Token list & Style for the author & \verb!{\Huge\bfseries}!\\
+% \verb!position! & Token list & Style for the position & \verb!{\itshape}!\\
+% \verb!affiliations! & Token list & Style for the affiliations & \verb!{\small}!\\
+% \verb!street! & Token list & Style for the street and number & \verb!{\small}!\\
+% \verb!zipcode! & Token list & Style for the zipcode & \verb!{\small}!\\
+% \verb!city! & Token list & Style for the city & \verb!{\small}!\\
+% \verb!country! & Token list & Style for the country & \verb!{\small}!\\
+% \verb!address! & Token list & Defines the style for \verb!street!, \verb!zipcode!, \verb!city!, and \verb!address! & \\
+% \verb!email! & Token list & Style for the email address(es) & \verb!{\small}!\\
+% \verb!website! & Token list & Style for the website URL & \verb!{\small}!\\
+% \verb!github! & Token list & Style for the GitHub link & \verb!{\small}!\\
+% \verb!orcid! & Token list & Style for the orcid link & \verb!{\small}!\\
+% \verb!linkedIn! & Token list & Style for the linkedIn link & \verb!{\small}!\\
+% \verb!links! & Token list & Defines the style for \verb!email!, \verb!website!, \verb!github!, \verb!orcid!, and \verb!linkedIn! &\\
+% \verb!date! & Token list & Style to print the date of the last update & \verb!{\footnotesize}!\\
+% \verb!vertical-space! & Skip & Size of the vertical space between the author and the position & \verb!1em!\\
+% \verb!portion-photo! & Floating number & Portion of the line width to reserve for the portrait picture & \verb!.25!\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{titleSetup}.}%
+% \label{tab:titleSetup}
+% \end{table}
+%
+% \subsection{Fields and Styles}
+%
+% \begin{variable}{
+%   \l_title_author_tl,
+%   \l_title_position_tl,
+%   \l_title_affiliations_tl,
+%   \l_title_photo_tl,
+%   \l_title_email_clist,
+%   \l_title_website_tl,
+%   \l_title_github_tl,
+%   \l_title_orcid_tl,
+%   \l_title_linkedIn_tl,
+%   \l_title_street_tl,
+%   \l_title_zipcode_tl,
+%   \l_title_city_tl,
+%   \l_title_country_tl,
+% }
+% Each field variable corresponds to a key of \Cref{tab:makecvtitle}.
+% Observe that emails are stored within a \verb!clist! (comma separated list).
+% See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
+% in the fields.
+% \end{variable}
+%
+% \begin{variable}{\l_title_authorStyle_tl}
+% The style for the \verb!author! field.
+% Initially equals to \verb!{\Huge\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_title_positionStyle_tl}
+% The style for the \verb!position! field.
+% Initially equals to \verb!{\itshape}!.
+% \end{variable}
+% \begin{variable}{\l_title_affiliationsStyle_tl}
+% The style for the \verb!affiliations! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_streetStyle_tl}
+% The style for the \verb!street! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_zipcodeStyle_tl}
+% The style for the \verb!zipcode! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_cityStyle_tl}
+% The style for the \verb!city! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_countryStyle_tl}
+% The style for the \verb!country! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_emailStyle_tl}
+% The style for the \verb!email! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_websiteStyle_tl}
+% The style for the \verb!website! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_githubStyle_tl}
+% The style for the \verb!github! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_orcidStyle_tl}
+% The style for the \verb!orcid! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_title_linkedInStyle_tl}
+% The style for the \verb!linkedIn! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+%
+% \begin{variable}{\l_title_dateStyle_tl}
+% If non empty, the sentence \enquote{Last updated on \cs{today}} (where \cs{today}
+% is expanded), using this style.
+% Redefine the command \cs{updatedMessage} to change the sentence.
+% Initially equals to \verb!{\footnotesize}!.
+% \end{variable}
+%
+% \begin{variable}{\l_title_vspace_skip}
+% Governs the vertical space between the author and the position when typesetting
+% the title with the initial commands.
+% The vertical space between the position and the affiliation(s) is obtained by
+% substracting \verb!.5em! from this variable.
+% See \cs{useVSpace}.
+% Initially equals to \verb!{1em}!.
+% \end{variable}
+%
+% \begin{variable}{\l_title_portionForPhoto_fp}
+% Governs the horizontal space to be reserved for the portrait picture, given in
+% a decimal number in \([0, 1]\).
+% The value is then multiplied by \verb!\linewidth! to obtain the final horizontal
+% space.
+% Initially equals to \verb!.25! (i.e., a quarter of the line width).
+% \end{variable}
+%
+% \subsection{Typesetting Commands}
+%
+% \begin{function}{\formatAddress}
+%   \begin{syntax}
+%     \cs{formatAddress}
+%   \end{syntax}
+% Typesets the office's address.
+% \end{function}
+%
+% \begin{function}{\formatEmail}
+%   \begin{syntax}
+%     \cs{formatEmail} \marg{email address}
+%   \end{syntax}
+% Typesets a single email address.
+% By default, this draws a little envelope \faEnvelope[regular]
+% (using \cs{faEnvelope[regular]} from package \verb!fontawesome5!), and calls the
+% command
+% \cs{formatURL}\verb!{mailto:}!\marg{email address}.
+% \end{function}
+%
+% \begin{function}{\formatEmails}
+%   \begin{syntax}
+%     \cs{formatEmails}
+%   \end{syntax}
+% For every email address stored in the field \verb!email!, calls
+% \cs{formatEmail} on that address.
+% Only redefine this if you know how to use comma separated list.
+% \end{function}
+%
+% \begin{function}{\formatLinks}
+%   \begin{syntax}
+%     \cs{formatLinks}
+%   \end{syntax}
+% Typesets the links.
+% By default, it prints the email addresses, the website URL preceded by \faHome{} 
+% (\verb!\faHome! from package \verb!{fontawesome5}!),
+% the GitHub link preceded by \faGithub{} (\verb!\faGithub!),
+% the ORCID link preceded by \faOrcid{} (\verb!\faOrcid!),
+% and the LinkedIn link preceded by \faLinkedin{} (\verb!\faLinkedin!),
+% in this order.
+% \end{function}
+%
+% \begin{function}{\updatedMessage}
+%   \begin{syntax}
+%     \cs{updatedMessage}
+%   \end{syntax}
+% By default, typesets the sentence \enquote{Last updated on \cs{today}}, such that
+% \cs{today} is expanded.
+% \end{function}
+%
+% \begin{function}{\showUpdated}
+%   \begin{syntax}
+%     \cs{showUpdated}
+%   \end{syntax}
+% By default, calls the command \cs{updatedMessage}, using the appropriate style.
+% \end{function}
+%
+% \begin{function}{\formatcvtitle}
+%   \begin{syntax}
+%     \cs{formatcvtitle}
+%   \end{syntax}
+% By default, creates two minipages that are displayed side by side.
+% The first (on the left) contains the author, position, affiliations, the
+% office's address and the links, in this order such that
+% the author, position, and affiliations are centered.
+% The second minipage (on the right) contains the portrait picture, and the
+% message for the last update.
+% \end{function}
+%
+% \section{The \enquote{publication} Module}
+%
+% The title produced by the \verb!academiccv! class contains multiple fields,
+% such as the name, current affiliation(s) and position, email address(es),
+% links to a personnal website, etc.
+% To configure the values that must appear and typeset the title, simply use
+% the following command.
+%
+% \begin{function}{\publication}
+%   \begin{syntax}
+%     \cs{publication} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:publication}.
+% By default, all values are empty and, thus, not displayed.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l p{160pt} r}
+% \toprule
+% Key & Value type & Details & Required\\
+% \midrule
+% \verb!title! & Token list & The title of the publication & Yes\\
+% \verb!authors! & Token list & The authors & Yes\\
+% \verb!year! & Token list & The publication year & Yes\\
+% \verb!reference! & Token list & The bibliography reference & No\\
+% \verb!where! & Token list & The conference/journal & No\\
+% \verb!shortWhere! & Token list & The acronym of the conference/journal & No\\
+% \verb!doi! & Token list & The DOI & No\\
+% \verb!doi-prefix! & Token list & What to print before the DOI & No\\
+% \verb!arxiv! & Token list & The arXiv DOI & No\\
+% \verb!arxiv-prefix! & Token list & What to print before the arXiv DOI & No\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{publication}.}%
+% \label{tab:publication}
+% \end{table}
+%
+% Styles can be changed with the following command.
+%
+% \begin{function}{\publicationSetup}
+%   \begin{syntax}
+%     \cs{publicationSetup} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:publicationSetup}.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l p{140pt} r}
+% \toprule
+% Key & Value type & Details & Default value\\
+% \midrule
+% \verb!title! & Token list & Style for the title & \verb!{\large\bfseries}!\\
+% \verb!authors! & Token list & Style for the author & \verb!{\normalfont}!\\
+% \verb!year! & Token list & Style for the year & \verb!{\normalfont}!\\
+% \verb!reference! & Token list & Style for the reference & \verb!{\bfseries}!\\
+% \verb!where! & Token list & Style for the conference/journal & \verb!{\itshape}!\\
+% \verb!shortWhere! & Token list & Style for the acronym of conference/journal & \verb!{\itshape}!\\
+% \verb!doi! & Token list & Style for the DOI link & \verb!{\normalfont}!\\
+% \verb!arxiv! & Token list & Style for the arXiv link & \verb!{\normalfont}!\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{publicationSetup}.}%
+% \label{tab:publicationSetup}
+% \end{table}
+%
+% \subsection{Fields and Styles}
+%
+% \begin{variable}{
+%   \l_publication_title_tl,
+%   \l_publication_authors_tl,
+%   \l_publication_year_tl,
+%   \l_publication_ref_tl,
+%   \l_publication_where_tl,
+%   \l_publication_shortWhere_tl,
+%   \l_publication_doi_tl,
+%   \l_publication_doiPrefix_tl,
+%   \l_publication_arxiv_tl,
+%   \l_publication_arxivPrefix_tl,
+% }
+% Each field variable corresponds to a key of \Cref{tab:publication}.
+% See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
+% in the fields.
+% \end{variable}
+%
+% \begin{variable}{\l_publication_titleStyle_tl}
+% The style for the \verb!title! field.
+% Initially equals to \verb!{\large\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_publication_authorsStyle_tl}
+% The style for the \verb!authors! field.
+% Initially equals to \verb!{\normalfont}!.
+% \end{variable}
+% \begin{variable}{\l_publication_yearStyle_tl}
+% The style for the \verb!year! field.
+% Initially equals to \verb!{\normalfont}!.
+% \end{variable}
+% \begin{variable}{\l_publication_refStyle_tl}
+% The style for the \verb!ref! field.
+% Initially equals to \verb!{\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_publication_whereStyle_tl}
+% The style for the \verb!where! field.
+% Initially equals to \verb!{\itshape}!.
+% \end{variable}
+% \begin{variable}{\l_publication_shortWhereStyle_tl}
+% The style for the \verb!shortWhere! field.
+% Initially equals to \verb!{\itshape}!.
+% \end{variable}
+% \begin{variable}{\l_publication_doiStyle_tl}
+% The style for the \verb!doi! field.
+% Initially equals to \verb!{\normalfont}!.
+% \end{variable}
+% \begin{variable}{\l_publication_arxivStyle_tl}
+% The style for the \verb!arxiv! field.
+% Initially equals to \verb!{\normalfont}!.
+% \end{variable}
+%
+% \subsection{Typesetting Commands}
+%
+% \begin{function}{\printPublication}
+%   \begin{syntax}
+%     \cs{printPublication}
+%   \end{syntax}
+% Typesets a publication, using the fields and styles defined by \cs{publication}
+% and \cs{publicationSetup}.
+% By default, is prints the bibliography reference between square brackets,
+% the title,
+% the authors,
+% the conference/journal,
+% its acronym (in parenthesis if both the conference/journal and its acronym are given),
+% the year,
+% the DOI link,
+% and the arXiv DOI link,
+% in this order.
+% \end{function}
+%
+% \end{documentation}
+%
+% \begin{implementation}
+%
+% \section{Implementation details}
+%
+% \subsection{Formatting tools}
+
+\ExplSyntaxOn
+
+% \begin{macro}{\useVSpace}
+%    \begin{macrocode}
+\NewDocumentCommand{ \useVSpace } { m m O{0pt} } {
+  \skip_vertical:n {\skip_eval:n {#3 + \use:c {l_#1_#2_skip}}}
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\formatURL}
+% The function requires two variables, as \verb!\href! fails when we construct
+% the text to be printed inside the argument.
+%    \begin{macrocode}
+\tl_new:N \l_url_tl
+\tl_new:N \l_fullURL_tl
+\NewDocumentCommand{ \formatURL } { m m } {
+  \tl_set_eq:Nc \l_url_tl {#2}
+  \tl_set:Nn \l_fullURL_tl {#1\l_url_tl}
+  \href{\l_fullURL_tl}{\nolinkurl{\l_url_tl}}
+}
+%    \end{macrocode}
+% \end{macro}
+ 
+% \begin{macro}{\ifemptyTF}
+%    \begin{macrocode}
+\NewDocumentCommand { \ifemptyTF } { m m O{tl} m m } {
+  \tl_if_empty:cTF {l_#1_#2_#3} {#4} {#5}
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\print, \printURL}
+%    \begin{macrocode}
+\NewDocumentCommand { \print } { O{} m m O{} O{tl} } {
+  \ifemptyTF{#2}{#3}[#5]{}{
+    {
+      \use:c {l_#2_#3Style_tl}     % Style
+      { % Content
+        {#1}
+        \use:c {l_#2_#3_tl}
+        {#4}
+      }  
+    }
+  }
+}
+%    \end{macrocode}
+%
+%    \begin{macrocode}
+\NewDocumentCommand{ \printURL } { O{} m m m O{} O{tl} } {
+  \ifemptyTF{#2}{#3}[#6]{}{
+    {
+      \use:c {l_#2_#3Style_tl}
+      {
+        {#1}
+        \formatURL{#4}{l_#2_#3_#6}
+        {#5}
+      }
+    }
+  }
+}
+%    \end{macrocode}
+% \end{macro}
+
+\ExplSyntaxOff
+
+% \end{implementation}
+
+\endinput
