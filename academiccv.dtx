@@ -30,7 +30,10 @@
 %<class>\RequirePackage{graphicx}
 %<class>\RequirePackage[usenames, dvipsnames, svgnames, x11names]{xcolor}
 %<class>\RequirePackage{fontawesome5}
+%<class>\RequirePackage[compact]{titlesec}
+%<class>\RequirePackage{tikz}
 %
+%<class>\RequirePackage{academiccv-section}
 %<class>\RequirePackage{academiccv-title}
 %<class>\RequirePackage{academiccv-publication}
 %
@@ -106,13 +109,17 @@
 % named \meta{suffix} while outputting only the contents of \meta{suffix}.
 % \end{function}
 %
-% \begin{function}{\ifemptyTF}
+% \begin{function}{\ifemptyTF, \iftrueTF}
 %   \begin{syntax}
 %     \cs{ifemptyTF} \marg{module} \marg{field} \oarg{field type} \marg{true} \marg{false}
+%     \cs{iftrueTF} \marg{module} \marg{field} \marg{true} \marg{false}
 %   \end{syntax}
-% Test if the variable \meta{field} of \meta{module} is empty of type
-% \meta{field type}.
+% \cs{ifemptyTF} tests if the variable \meta{field} of \meta{module} of
+% type \meta{field type} is empty.
 % If it is empty, it executes \meta{true}, otherwise, \meta{false}.
+%
+% \cs{iftrueTF} tests if the \emph{boolean} variable \meta{field} of \meta{module}
+% if true.
 % \end{function}
 %
 % \begin{function}{\print}
@@ -210,7 +217,7 @@
 % \verb!links! & Token list & Defines the style for \verb!email!, \verb!website!, \verb!github!, \verb!orcid!, and \verb!linkedIn! &\\
 % \verb!date! & Token list & Style to print the date of the last update & \verb!{\footnotesize}!\\
 % \verb!vertical-space! & Skip & Size of the vertical space between the author and the position & \verb!1em!\\
-% \verb!portion-photo! & Floating number & Portion of the line width to reserve for the portrait picture & \verb!.25!\\
+% \verb!portion-photo! & Floating-point number & Portion of the line width to reserve for the portrait picture & \verb!.25!\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{titleSetup}.}%
@@ -381,6 +388,68 @@
 % The second minipage (on the right) contains the portrait picture, and the
 % message for the last update.
 % \end{function}
+%
+% \section{The \enquote{section} module}
+%
+% The \verb!academiccv! class relies on the \verb!titlesec! package to change how
+% section headings are typesetted.
+% That is, it allows to draw rules above and below the headings, and to toggle
+% whether the numbering is shown.
+% Moreover, it is possible to draw a rectangle between the numbering (or the left
+% margin) and the section's name, except for subsubsections.
+% Note that the height of the rectangles is fixed (only the width and the color
+% can vary).
+% Sections, subsections, and subsubsections styles can be defined by the following
+% commands.
+%
+% \begin{function}{\sectionSetup, \subsectionSetup, \subsubsectionSetup}
+%   \begin{syntax}
+%     \cs{sectionSetup} \marg{key-value pairs}
+%     \cs{subsectionSetup} \marg{key-value pairs}
+%     \cs{subsubsectionSetup} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:sectionSetup}.
+% The three commands expect the same key-value pairs, and their default values
+% are the same.
+% Note that the keys starting with \verb!rectangle/! are not defined for
+% subsubsections.
+%
+% It is highly recommended that the rectangle and the numbering are not both
+% shown at the same time.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l p{45pt} p{95pt} r}
+% \toprule
+% Key & Value type & Details & Default value\\
+% \midrule
+% \verb!show-number! & Boolean & Whether to show the numbering & \verb!false!\\
+% \verb!style! & Token list & Headings style & \verb!{\Large\bfseries}!\\
+% \verb!hspace! & Skip & Horizontal space between the numbering and the title & \verb!2em!\\
+% \midrule
+% \verb!before/vspace-before! & Skip & Vertical space before the upper rule & \verb!3pt!\\
+% \verb!before/width! & Skip & The width of the upper rule & \verb!2pt!\\
+% \verb!before/color! & Color & The color of the upper rule (must be of the shape \verb!red! or \verb?red!70!blue?) & \verb!black!\\
+% \verb!before/vspace-after! & Skip & Vertical space after the upper rule & \verb!5pt!\\
+% \midrule
+% \verb!after/vspace-before! & Skip & Vertical space before the lower rule & \verb!3pt!\\
+% \verb!after/width! & Skip & The width of the lower rule & \verb!2pt!\\
+% \verb!after/color! & Color & The color of the lower rule (must be of the shape \verb!red! or \verb?red!70!blue?) & \verb!black!\\
+% \verb!after/vspace-after! & Skip & Vertical space after the lower rule & \verb!5pt!\\
+% \midrule
+% \verb!rectangle/width! & Floating-point number & Width of the rectangle (in TikZ' coordinate system) & \verb!4!\\
+% \verb!rectangle/color! & Color & The color of the rectangle (must be of the shape \verb!red! or \verb?red!70!blue?) & \verb!black!\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{sectionSetup}, \cs{subsectionSetup},
+% and \cs{subsubsectionSetup}.}%
+% \label{tab:sectionSetup}
+% \end{table}
+%
+% Since this module does not define any typesetting function, variables are not
+% listed.
 %
 % \section{The \enquote{publication} Module}
 %
@@ -558,6 +627,14 @@
 %    \begin{macrocode}
 \NewDocumentCommand { \ifemptyTF } { m m O{tl} m m } {
   \tl_if_empty:cTF {l_#1_#2_#3} {#4} {#5}
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\iftrueTF}
+%    \begin{macrocode}
+\NewDocumentCommand { \iftrueTF } { m m m m } {
+  \bool_if:cTF {l_#1_#2_bool} {#3} {#4}
 }
 %    \end{macrocode}
 % \end{macro}

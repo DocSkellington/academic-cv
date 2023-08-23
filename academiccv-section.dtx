@@ -1,0 +1,261 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2023 by Gaëtan Staquet
+% -----------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{\jobname.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}
+%<package>\ProvidesExplPackage{academiccv-section}{2023/08/19}{v1.0}{Academic curriculum vitae: sections}
+
+\ExplSyntaxOn
+
+% \begin{macro}{\sectionSetup}
+%    \begin{macrocode}
+\skip_new:N \l_section_before_vspaceBefore_skip
+\skip_new:N \l_section_before_ruleWidth_skip
+\skip_new:N \l_section_before_vspaceAfter_skip
+\keys_define:nn {section / before} {
+  vspace-before   .skip_set:N = \l_section_before_vspaceBefore_skip,
+  vspace-before   .initial:n = {3pt},
+  width           .skip_set:N = \l_section_before_ruleWidth_skip,
+  width           .initial:n = {2pt},
+  color           .code:n = {
+    \colorlet{section_before_rule}{#1}
+  },
+  color           .initial:n = {black},
+  vspace-after    .skip_set:N = \l_section_before_vspaceAfter_skip,
+  vspace-after    .initial:n = {5pt},
+}
+  
+\bool_new:N \l_section_showNumber_bool
+\tl_new:N \l_section_tyle_tl
+\keys_define:nn {section} {
+  show-number     .bool_set:N = \l_section_showNumber_bool,
+  show-number     .initial:n = {false},
+  style           .tl_set:N = \l_section_style_tl,
+  style           .initial:n = {\normalfont\Large\bfseries},
+  hspace          .skip_set:N = \l_section_hspaceBefore_skip,
+  hspace          .initial:n = {2em},
+}
+
+\fp_new:N \l_section_rectangle_width_fp
+\keys_define:nn {section / rectangle} {
+  width           .fp_set:N = \l_section_rectangle_width_fp,
+  width           .initial:n = 4,
+  color           .code:n = {
+    \colorlet{section_rectangle}{#1}
+  },
+  color           .initial:n = {black},
+}
+
+\skip_new:N \l_section_after_vspaceBefore_skip
+\skip_new:N \l_section_after_ruleWidth_skip
+\skip_new:N \l_section_after_vspaceAfter_skip
+\keys_define:nn {section / after} {
+  vspace-before .skip_set:N = \l_section_after_vspaceBefore_skip,
+  vspace-before .initial:n = {3pt},
+  width         .skip_set:N = \l_section_after_ruleWidth_skip,
+  width         .initial:n = {2pt},
+  color         .code:n = {
+    \colorlet{section_after_rule}{#1}
+  },
+  color         .initial:n = {black},
+  vspace-after  .skip_set:N = \l_section_after_vspaceAfter_skip,
+  vspace-after  .initial:n = {5pt},
+}
+
+\NewDocumentCommand{\sectionSetup}{m}{\keys_set:nn {section} {#1}}
+
+\titleformat{\section}[hang]{
+  \useVSpace{section}{before_vspaceBefore}
+  \titleline{
+    \color{section_before_rule}
+    \titlerule[\l_section_before_ruleWidth_skip]
+  }
+  \useVSpace{section}{before_vspaceAfter}
+  \l_section_style_tl
+}{
+  \iftrueTF {section} {showNumber} {\thesection} {}
+  \raisebox{.1em}{
+    \tikz \fill[color=section_rectangle] (0, 0) rectangle
+      (\fp_use:N \l_section_rectangle_width_fp, 0.2);
+  }
+}{\l_section_hspaceBefore_skip}{}[
+  \useVSpace{section}{after_vspaceBefore}
+  \titleline{
+    \color{section_after_rule}
+    \titlerule[\l_section_after_ruleWidth_skip]
+  }
+  \useVSpace{section}{after_vspaceAfter}
+]
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\subsectionSetup}
+%    \begin{macrocode}
+\skip_new:N \l_subsection_before_vspaceBefore_skip
+\skip_new:N \l_subsection_before_ruleWidth_skip
+\skip_new:N \l_subsection_before_vspaceAfter_skip
+\keys_define:nn {subsection / before} {
+  vspace-before   .skip_set:N = \l_subsection_before_vspaceBefore_skip,
+  vspace-before   .initial:n = {3pt},
+  width           .skip_set:N = \l_subsection_before_ruleWidth_skip,
+  width           .initial:n = {2pt},
+  color           .code:n = {
+    \colorlet {subsection_before_rule} {#1}
+  },
+  color           .initial:n = {black},
+  vspace-after    .skip_set:N = \l_subsection_before_vspaceAfter_skip,
+  vspace-after    .initial:n = {5pt},
+}
+  
+\bool_new:N \l_subsection_showNumber_bool
+\tl_new:N \l_subsection_tyle_tl
+\keys_define:nn {subsection} {
+  show-number     .bool_set:N = \l_subsection_showNumber_bool,
+  show-number     .initial:n = {false},
+  style           .tl_set:N = \l_subsection_style_tl,
+  style           .initial:n = {\normalfont\Large\bfseries},
+  hspace-before   .skip_set:N = \l_subsection_hspaceBefore_skip,
+  hspace-before   .initial:n = {2em},
+}
+
+\fp_new:N \l_subsection_rectangle_width_fp
+\keys_define:nn {subsection / rectangle} {
+  width           .fp_set:N = \l_subsection_rectangle_width_fp,
+  width           .initial:n = 4,
+  color           .code:n = {
+    \colorlet{subsection_rectangle}{#1}
+  },
+  color           .initial:n = {black},
+}
+
+\skip_new:N \l_subsection_after_vspaceBefore_skip
+\skip_new:N \l_subsection_after_ruleWidth_skip
+\skip_new:N \l_subsection_after_vspaceAfter_skip
+\keys_define:nn {subsection / after} {
+  vspace-before .skip_set:N = \l_subsection_after_vspaceBefore_skip,
+  vspace-before .initial:n = {3pt},
+  width         .skip_set:N = \l_subsection_after_ruleWidth_skip,
+  width         .initial:n = {2pt},
+  color         .code:n = {
+    \colorlet {subsection_after_rule} {#1}
+  },
+  color         .initial:n = {black},
+  vspace-after  .skip_set:N = \l_subsection_after_vspaceAfter_skip,
+  vspace-after  .initial:n = {5pt},
+}
+
+\NewDocumentCommand{\subsectionSetup}{m}{\keys_set:nn {subsection} {#1}}
+
+\titleformat{\subsection}[hang]{
+  \useVSpace{subsection}{before_vspaceBefore}
+  \titleline{
+    \color{subsection_before_rule}
+    \titlerule[\l_subsection_before_ruleWidth_skip]
+  }
+  \useVSpace{subsection}{before_vspaceAfter}
+  \l_subsection_style_tl
+}{
+  \iftrueTF {subsection} {showNumber} {\thesubsection} {}
+  \raisebox{.15em}{
+    \tikz \fill[color=subsection_rectangle] (0, 0) rectangle
+      (\fp_use:N \l_subsection_rectangle_width_fp, 0.1);
+  }
+}{\l_subsection_hspaceBefore_skip}{}[
+  \useVSpace{subsection}{after_vspaceBefore}
+  \titleline{
+    \color{subsection_after_rule}
+    \titlerule[\l_subsection_after_ruleWidth_skip]
+  }
+  \useVSpace{subsection}{after_vspaceAfter}
+]
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{\subsubsectionSetup}
+%    \begin{macrocode}
+\skip_new:N \l_subsubsection_before_vspaceBefore_skip
+\skip_new:N \l_subsubsection_before_ruleWidth_skip
+\skip_new:N \l_subsubsection_before_vspaceAfter_skip
+\keys_define:nn {subsubsection / before} {
+  vspace-before   .skip_set:N = \l_subsubsection_before_vspaceBefore_skip,
+  vspace-before   .initial:n = {3pt},
+  width           .skip_set:N = \l_subsubsection_before_ruleWidth_skip,
+  width           .initial:n = {2pt},
+  color           .code:n = {
+    \colorlet {subsubsection_before_rule} {#1}
+  },
+  color           .initial:n = {black},
+  vspace-after    .skip_set:N = \l_subsubsection_before_vspaceAfter_skip,
+  vspace-after    .initial:n = {5pt},
+}
+  
+\bool_new:N \l_subsubsection_showNumber_bool
+\tl_new:N \l_subsubsection_tyle_tl
+\keys_define:nn {subsubsection} {
+  show-number     .bool_set:N = \l_subsubsection_showNumber_bool,
+  show-number     .initial:n = {false},
+  style           .tl_set:N = \l_subsubsection_style_tl,
+  style           .initial:n = {\normalfont\Large\bfseries},
+  hspace-before   .skip_set:N = \l_subsubsection_hspaceBefore_skip,
+  hspace-before   .initial:n = {2em},
+}
+
+\skip_new:N \l_subsubsection_after_vspaceBefore_skip
+\skip_new:N \l_subsubsection_after_ruleWidth_skip
+\skip_new:N \l_subsubsection_after_vspaceAfter_skip
+\keys_define:nn {subsubsection / after} {
+  vspace-before .skip_set:N = \l_subsubsection_after_vspaceBefore_skip,
+  vspace-before .initial:n = {3pt},
+  width         .skip_set:N = \l_subsubsection_after_ruleWidth_skip,
+  width         .initial:n = {2pt},
+  color         .code:n = {
+    \colorlet {subsubsection_after_rule} {#1}
+  },
+  color         .initial:n = {black},
+  vspace-after  .skip_set:N = \l_subsubsection_after_vspaceAfter_skip,
+  vspace-after  .initial:n = {5pt},
+}
+
+\NewDocumentCommand{\subsubsectionSetup}{m}{\keys_set:nn {subsubsection} {#1}}
+
+\titleformat{\subsubsection}[hang]{
+  \useVSpace{subsubsection}{before_vspaceBefore}
+  \titleline{
+    \color{subsubsection_before_rule}
+    \titlerule[\l_subsubsection_before_ruleWidth_skip]
+  }
+  \useVSpace{subsubsection}{before_vspaceAfter}
+  \l_subsubsection_style_tl
+}{
+  \iftrueTF {subsubsection} {showNumber} {\thesubsubsection} {}
+}{\l_subsubsection_hspaceBefore_skip}{}[
+  \useVSpace{subsubsection}{after_vspaceBefore}
+  \titleline{
+    \color{subsubsection_after_rule}
+    \titlerule[\l_subsubsection_after_ruleWidth_skip]
+  }
+  \useVSpace{subsubsection}{after_vspaceAfter}
+]
+%    \end{macrocode}
+% \end{macro}
+
+\ExplSyntaxOff
+
+\endinput

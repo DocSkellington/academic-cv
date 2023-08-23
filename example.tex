@@ -1,7 +1,24 @@
 % Read the PDF documentation for all parameters
 \documentclass[a4paper, 11pt, colorlinks]{academiccv}
 
+\sectionSetup {
+  before/color = green,
+  rectangle/color = blue,
+  after/color = purple,
+}
+
+\subsectionSetup {
+  show-number = true,
+  rectangle/width = 0,
+  after/color = red,
+}
+
 \begin{document}
+
+  {\bfseries
+  This example is purposefully visually horrible in order to illustrate how to
+  use the setup commands.
+  }
 
   \makecvtitle{
     author = John Who,
@@ -52,7 +69,12 @@
     country = Nowhere,
   }
 
+  \section{Work experience}
+  Please fill me!
+
   \section{Publications}
+
+  \subsection{Published}
 
   \publication{
     title = {Am I a Good Man?},
@@ -81,4 +103,13 @@
     doi-prefix = {Link:\ },
     doi = {00.0000/000-0-000-00000-00},
   }
+
+  \subsection{Preprints}
+  \publication{
+    title = {Exterminate!},
+    authors = {Supreme Davros},
+    year = {8743},
+  }
+
+  \subsubsection{Test}
 \end{document}
