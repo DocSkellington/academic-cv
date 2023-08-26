@@ -36,6 +36,7 @@
 %<class>\RequirePackage{academiccv-section}
 %<class>\RequirePackage{academiccv-title}
 %<class>\RequirePackage{academiccv-publication}
+%<class>\RequirePackage{academiccv-item}
 %
 %<*driver>
 \documentclass[a4paper]{l3doc}
@@ -598,6 +599,61 @@
 % and the arXiv DOI link,
 % in this order.
 % \end{function}
+%
+% \section{The \enquote{item} module}
+%
+% This module defines a command that can be used for generic CV items.
+% These items are split into two parts, called the \emph{margin} and the
+% \emph{main}, separated by some horizontal space.
+% By default, the margin is typesetted on the left and the main on the right
+% (while being horizontally aligned at the top).
+% It is possible to swap the order.
+% 
+% \begin{function}{\cvitem}
+%   \begin{syntax}
+%     \cs{cvitem} \oarg{style} \marg{margin} \marg{main}
+%   \end{syntax}
+% Creates an item, using \meta{margin} and \meta{main}.
+% It is possible to override the style by providing key-value pairs as the first
+% optional argument.
+% See \Cref{tab:itemSetup} for the accepted pairs, and \cs{itemSetup} for the
+% global command.
+% \end{function}
+%
+% Styles can be defined globally thanks to the following command.
+%
+% \begin{function}{\itemSetup}
+%   \begin{syntax}
+%     \cs{itemSetup} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:itemSetup}.
+% The size of the main part is automatically computed as the remaining horizontal
+% space on the line after substracting the margin size and the space between
+% the margin and the main part.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l p{140pt} r}
+% \toprule
+% Key & Value type & Details & Default value\\
+% \midrule
+% \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
+% \verb!margin! & Token list & Style for the margin content & \verb!{\normalfont}!\\
+% \verb!main! & Token list & Style for the main path & \verb!{\normalfont}!\\
+% \midrule
+% \verb!margin-size! & Skip & Size for the margin & \verb!{140pt}!\\
+% \verb!space! & Skip & Size between the margin and main content & \verb!{5pt}!\\
+% \verb!vspace-after! & Skip & Vertical space to add after the item & \verb!{6pt}!\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{itemSetup}.}%
+% \label{tab:itemSetup}
+% \end{table}
+%
+% Since this module does not provide any typesetting function, variables are not
+% described.
 %
 % \end{documentation}
 %
