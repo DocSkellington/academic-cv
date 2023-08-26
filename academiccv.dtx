@@ -22,7 +22,7 @@
 %<class>\NeedsTeXFormat{LaTeX2e}
 %<class>\ProvidesExplClass{academiccv}{2023/08/26}{v0.2}{Academic curriculum vitae document class}
 %
-%<class>\LoadClass{article} % TODO: remove once everything is defined
+%<class>\LoadClass{article}
 %<class>\RequirePackage{etoolbox}
 %<class>\RequirePackage{xparse}
 %<class>\RequirePackage{xspace}
@@ -52,6 +52,9 @@
 \usepackage{cleveref}
 \usepackage{csquotes}
 \usepackage{fontawesome5}
+\hypersetup{
+  linkcolor = {blue},
+}
 \begin{document}
   \DisableImplementation
   \DocInput{\jobname.dtx}
@@ -69,25 +72,60 @@
 % \begin{documentation}
 %
 % \begin{abstract}
-%   Put text here.
+%   The academiccv class allows one to expose their academic career into a
+% curriculum vitae.
+% That is, the class defines easy-to-use commands for publications, projects,
+% supervisions, talks, courses, and so on.
+% It is also easy to change how the different values are typesetted.
+%
+% This work is inspired by the moderncv class.
 % \end{abstract}
 %
 % \tableofcontents
 %
 % \section{Introduction}
 %
-% Put text here.
+% The \verb!academiccv! class is split into multiple \enquote{modules}, each
+% defining a set of commands geared towards a particular field of an academic
+% career.
+% All modules are automatically loaded when the class is used.
+% Any document that wants to use \verb!academiccv! simply needs to start with
+% \verb!\documentclass{academiccv}!.
+% While the class itself does not define any new option, it inherits from
+% the article class (and, thus, accepts all of the options of article).
+% In particular, \verb!a4paper! and the like can be useful.
 %
-% Written in Expl3, and uses the variable type.
-% In particular, a token list can be any sequence of characters and \LaTeX commands.
+% Before delving into each module, we highlight the fact that this class, its
+% packages and its documentation are written using the \verb!expl3! package.
+% In particular, we define variables whose names are not valid in \LaTeX{}2e.
+% Moreover, the description gives the variable type using Expl3 names.
+% While we refer the reader to the documentation of Expl3 for all details,
+% we give here some useful information to be able to read the rest of this document.
+%
+% The used variable types are \enquote{boolean} (in the usual meaning),
+% \enquote{token list}, and \enquote{skip}.
+% A token list can be any sequence of characters and \LaTeX commands.
 % For instance, \verb!{Gaëtan Staquet}! and \verb!{Gaëtan \and Staquet}! are both
 % valid token lists.
-%
-% Define module.
-% Most of the modules provide a command to typeset a particular entry (including
+% Likewise, \verb!{\bfseries\color{blue}\scshape}! is also a valid token list.
+% A skip is simply a length, e.g., \verb!10pt!, \verb!3em!, \verb!.7\linewidth!,
+% and so on.
+% Each module defines its own set of variables.
+% Each variable holding data is accompagnied by a variable holding the style
+% to apply when typesetting.
+% Most of the modules provide a command to add a particular entry (including
 % the style to apply to that particular entry), and a
 % command to define the style globally (for all entries that follow).
 %
+% Moreover, most of the modules also provide what we call
+% \enquote{typesetting commands} that
+% rely on the contents of the variables to print information in a certain way.
+% These functions can be overriden.
+% For instance, the command \cs{printPublication} command can be overriden
+% by calling \verb!\RenewDocumentCommand{\printPublication}{}{ ... }!.
+% To ease the use of the variables and their corresponding styles, we define a few 
+% commands.
+% 
 % \section{Typesetting tools}
 %
 % We start with functions that can be used to easily typeset fields of a given
@@ -172,6 +210,8 @@
 % modify this, call \cs{hypersetup} of package \verb!hyperref! after \cs{makecvtitle}.
 % \end{function}
 %
+% We do not forbid using multiple times \cs{makecvtitle} in a single document.
+%
 % \begin{table}
 % \centering
 % \begin{tabular}{l l p{160pt} r}
@@ -198,7 +238,7 @@
 % \label{tab:makecvtitle}
 % \end{table}
 %
-% Styles can be changed with the following command.
+% Styles can be changed globally with the following command.
 %
 % \begin{function}{\titleSetup}
 %   \begin{syntax}
@@ -507,7 +547,7 @@
 % \label{tab:publication}
 % \end{table}
 %
-% Styles can be changed with the following command.
+% Styles can be changed globally with the following command.
 %
 % \begin{function}{\publicationSetup}
 %   \begin{syntax}
