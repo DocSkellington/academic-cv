@@ -137,15 +137,61 @@
 
   \subsubsection{Subsubsection}
 
+  \section{Work Experience}
+
+  \job{
+    year = 1963 -- 1966,
+    title = The granddad,
+  }
+  \job{
+    year = 1966 -- 1969,
+    title = The clown,
+    description = {Stop, you're making me giddy!},
+    affiliation = Second body,
+  }
+  \job{
+    year = {1970 -- 1974},
+    title = The exiled,
+    description = {Ungh\dots Shoes, must find my shoes.},
+    affiliation = Third body,
+    style = { % use \jobSetup to setup style globally
+      year = {\itshape},
+      title = {\scshape},
+      description = {\bfseries},
+      affiliation = {\Large},
+    },
+  }
+  \job {
+    year = 1974 -- 1981,
+    title = The scarf,
+    description = Would you like a jelly baby?,
+    affiliation = Fourth body,
+    style = {
+      swap,
+    },
+  }
+
   \section{CV Items}
 
   \cvitem{Margin}{Simple content}
-  \cvitem[margin={\bfseries}]{Margin}{
+
+  \cvitem[
+    margin={\bfseries},
+    main={\scshape},
+  ]{
+    Margin\\
+    {\small Smaller margin}
+  }{
     Content\\
     {\small Some smaller text}
   }
+
   \cvitem[swap]{Margin}{Simple content}
-  \cvitem[swap]{Margin}{
+
+  \cvitem[swap]{
+    Margin\\
+    {\small Smaller margin}
+  }{
     Content\\
     {\small Some smaller text}
   }

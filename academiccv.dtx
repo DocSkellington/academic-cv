@@ -37,6 +37,7 @@
 %<class>\RequirePackage{academiccv-title}
 %<class>\RequirePackage{academiccv-publication}
 %<class>\RequirePackage{academiccv-item}
+%<class>\RequirePackage{academiccv-job}
 %
 %<*driver>
 \documentclass[a4paper]{l3doc}
@@ -654,6 +655,124 @@
 %
 % Since this module does not provide any typesetting function, variables are not
 % described.
+%
+% \section{The \enquote{job} module}
+%
+% To typeset past and current jobs, one can use generic CV items.
+% This module provides a nice interface to simplify typesetting.
+%
+% \begin{function}{\job}
+%   \begin{syntax}
+%     \cs{job} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:job}.
+% By default, all values are empty and, thus, not displayed.
+% It is possible to overwrite some styles specifically for one job.
+% See \Cref{tab:jobSetup} for the corresponding keys, and
+% \cs{jobSetup} for the command to define styles globally.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l l r}
+% \toprule
+% Key & Value type & Details & Required\\
+% \midrule
+% \verb!year! & Token list & Job's year(s) & No\\
+% \verb!title! & Token list & Job's title & No\\
+% \verb!affiliation! & Token list & Job's affiliation & No\\
+% \verb!description! & Token list & Job's description & No\\
+% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{job}.}%
+% \label{tab:job}
+% \end{table}
+% 
+% Styles can be defined globally thanks to the following command.
+%
+% \begin{function}{\jobSetup}
+%   \begin{syntax}
+%     \cs{jobSetup} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:jobSetup}.
+% The size of the main part is automatically computed as the remaining horizontal
+% space on the line after substracting the margin size and the space between
+% the margin and the main part.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l p{140pt} r}
+% \toprule
+% Key & Value type & Details & Default value\\
+% \midrule
+% \verb!year! & Token list & Style for the job's year(s) & \verb!{\bfseries}!\\
+% \verb!title! & Token list & Style for the job's title & \verb!{\bfseries}!\\
+% \verb!affiliation! & Token list & Style for the job's affilition & \verb!{\small}!\\
+% \verb!description! & Token list & Style for the job's description & \verb!{\small}!\\
+% \midrule
+% \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
+% \verb!margin-size! & Skip & Size for the margin & \verb!{80pt}!\\
+% \verb!space! & Skip & Size between the margin and main content & \verb!{5pt}!\\
+% \verb!vspace-after! & Skip & Vertical space to add after the item & \verb!{6pt}!\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{jobSetup}.}%
+% \label{tab:jobSetup}
+% \end{table}
+%
+% \subsection{Fields and Styles}
+%
+% \begin{variable}{
+%   \l_job_year_tl,
+%   \l_job_title_tl,
+%   \l_job_affiliation_tl,
+%   \l_job_description_tl,
+% }
+% Each field variable corresponds to a key of \Cref{tab:job}.
+% See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
+% in the fields.
+% \end{variable}
+%
+% \begin{variable}{\l_job_yearStyle_tl}
+% The style for the \verb!year! field.
+% Initially equals to \verb!{\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_job_titleStyle_tl}
+% The style for the \verb!title! field.
+% Initially equals to \verb!{\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_job_affiliationStyle_tl}
+% The style for the \verb!affiliation! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% \begin{variable}{\l_job_descriptionStyle_tl}
+% The style for the \verb!description! field.
+% Initially equals to \verb!{\small}!.
+% \end{variable}
+% Variables tied to the \enquote{item} module are not displayed here, as they are
+% not meant to be accessed.
+%
+% \subsection{Typesetting Commands}
+%
+% \begin{function}{\marginForJob}
+%   \begin{syntax}
+%     \cs{marginForJob}
+%   \end{syntax}
+% Typesets the content of the margin part for a job.
+% By default, it displays the year and affilition, each on their own line.
+% \end{function}
+%
+% \begin{function}{\mainForJob}
+%   \begin{syntax}
+%     \cs{mainForJob}
+%   \end{syntax}
+% Typesets the content of the main part for a job.
+% By default, it displays the title and description, each on their own line.
+% \end{function}
 %
 % \end{documentation}
 %
