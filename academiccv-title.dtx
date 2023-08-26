@@ -244,7 +244,14 @@
       \print{title}{affiliation}
     \end{center}
 
-    \formatAddress%\\
+    \formatAddress
+    \ifemptyTF{title}{country}{
+      \ifemptyTF{title}{city}{
+        \ifemptyTF{title}{zipcode}{
+          \ifemptyTF{title}{street}{}{\\}
+        }{\\}
+      }{\\}
+    }{\\}
     \formatLinks
   \end{minipage}
   \hfill
