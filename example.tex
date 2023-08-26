@@ -247,6 +247,29 @@
     },
   }
 
+  \section{Project}
+
+  \project{
+    shortName = Sonic,
+    name = Sonic Screwdriver,
+    role = Conceptor,
+    description = It makes noise!
+  }
+
+  \project{
+    shortName = Sonic,
+    name = Sonic Sunglasses,
+    role = Conceptor,
+    description = It makes noise \emph{and I look cool}!,
+    style = { % use \projectSetup for global settings
+      swap,
+      shortName = {\scshape},
+      name = {\itshape},
+      role = {\color{blue}},
+      description = {\bfseries}
+    }
+  }
+
   \section{CV Items}
   
   % In case the modules do not cover one of your needs, you can rely on the generic CV items
