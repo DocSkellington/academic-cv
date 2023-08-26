@@ -17,7 +17,8 @@
 
   {\bfseries
   This example is purposefully visually horrible in order to illustrate how to
-  use the commands.
+  use the commands and their impact.
+  Please read \verb!example.tex!.
   }
 
   \makecvtitle{
@@ -192,6 +193,32 @@
       conference = {\ttfamily},
       where = {\color{blue}},
     },
+  }
+
+  \section{Teaching}
+
+  \teach{
+    year = {Academic years 2021 to 2024},
+    course = {General Physics},
+    role = Associate Professor,
+    affiliation = Somewhere,
+    description = Main teacher.,
+  }
+
+  \teach{
+    year = {Academic years 2021 to 2024},
+    course = {Time and Stuff},
+    role = Teaching assistant,
+    affiliation = Somewhere else,
+    description = Teaching assistant supervising the practical sessions.,
+    style = { % use \teachSetup for global settings
+      swap,
+      year = {\itshape},
+      course = {\scshape},
+      role = {\bfseries},
+      affiliation = {\slshape},
+      description = {\ttfamily}
+    }
   }
 
   \section{CV Items}
