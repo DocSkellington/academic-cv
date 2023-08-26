@@ -180,7 +180,7 @@
 % \midrule
 % \verb!author! & Token list & The author of the CV & Yes\\
 % \verb!position! & Token list & The current position of the author & No\\
-% \verb!affiliations! & Token list & The current affiliations of the author & No\\
+% \verb!affiliation! & Token list & The current affiliation of the author & No\\
 % \verb!photo! & Token list & The path to the portrait file to display. Can be omitted but horizontal space will still be reserved (i.e., the result will be ugly), if you do not modify the corresponding style (see \cs{titleSetup}) & No\\
 % \verb!email! & Token list & One email address. Can be present multiple times and all addresses will be accumulated. & No\\
 % \verb!website! & Token list & URL (without \verb!https://!) to the author's website & No\\
@@ -216,7 +216,7 @@
 % \midrule
 % \verb!author! & Token list & Style for the author & \verb!{\Huge\bfseries}!\\
 % \verb!position! & Token list & Style for the position & \verb!{\itshape}!\\
-% \verb!affiliations! & Token list & Style for the affiliations & \verb!{\small}!\\
+% \verb!affiliation! & Token list & Style for the affiliation & \verb!{\small}!\\
 % \verb!street! & Token list & Style for the street and number & \verb!{\small}!\\
 % \verb!zipcode! & Token list & Style for the zipcode & \verb!{\small}!\\
 % \verb!city! & Token list & Style for the city & \verb!{\small}!\\
@@ -242,7 +242,7 @@
 % \begin{variable}{
 %   \l_title_author_tl,
 %   \l_title_position_tl,
-%   \l_title_affiliations_tl,
+%   \l_title_affiliation_tl,
 %   \l_title_photo_tl,
 %   \l_title_email_clist,
 %   \l_title_website_tl,
@@ -268,8 +268,8 @@
 % The style for the \verb!position! field.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
-% \begin{variable}{\l_title_affiliationsStyle_tl}
-% The style for the \verb!affiliations! field.
+% \begin{variable}{\l_title_affiliationStyle_tl}
+% The style for the \verb!affiliation! field.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_streetStyle_tl}
@@ -395,9 +395,9 @@
 %     \cs{formatcvtitle}
 %   \end{syntax}
 % By default, creates two minipages that are displayed side by side.
-% The first (on the left) contains the author, position, affiliations, the
+% The first (on the left) contains the author, position, affiliation, the
 % office's address and the links, in this order such that
-% the author, position, and affiliations are centered.
+% the author, position, and affiliation are centered.
 % The second minipage (on the right) contains the portrait picture, and the
 % message for the last update.
 % \end{function}
