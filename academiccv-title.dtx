@@ -132,6 +132,9 @@
   zipcode         .tl_set:N = \l_title_zipcode_tl,
   city            .tl_set:N = \l_title_city_tl,
   country         .tl_set:N = \l_title_country_tl,
+  style           .code:n = {
+    \keys_set:nn {titleStyle} {#1}
+  },
 }
 
 \fp_new:N \l_title_sizePhoto_fp
@@ -141,21 +144,7 @@
 \msg_new:nnn {academiccv} {title / emptyAuthor}
   { Title:~the~author~can~not~be~empty. }
 \NewDocumentCommand{\makecvtitle}{m}{
-  % Resetting fields
-  \tl_set_eq:NN \l_title_author_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_position_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_affiliations_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_photo_tl \c_empty_tl
-  \clist_set_eq:NN \l_title_email_clist \c_empty_clist
-  \tl_set_eq:NN \l_title_website_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_github_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_orcid_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_linkedIn_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_street_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_zipcode_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_city_tl \c_empty_tl
-  \tl_set_eq:NN \l_title_country_tl \c_empty_tl
-
+  \group_begin:
   % Parsing arguments
   \keys_set:nn {title} {#1}
 
@@ -176,6 +165,7 @@
   \dim_set:Nn \l_title_sizeText_dim {\fp_to_dim:N \l_title_sizeText_fp}
 
   \formatcvtitle
+  \group_end:
 }
 %    \end{macrocode}
 % \end{macro}
@@ -260,7 +250,9 @@
   \hfill
   \begin{minipage}[c]{\l_title_sizePhoto_dim}
     \strut{\vspace*{-\baselineskip}}\newline
-    \includegraphics[width=\textwidth, keepaspectratio]{\l_title_photo_tl}
+    \ifemptyTF{title}{photo}{}{
+      \includegraphics[width=\textwidth, keepaspectratio]{\l_title_photo_tl}
+    }
 
     \showUpdated
   \end{minipage}

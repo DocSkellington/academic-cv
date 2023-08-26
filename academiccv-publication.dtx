@@ -105,8 +105,13 @@
   shortWhere    .tl_set:N = \l_publication_shortWhere_tl,
   doi           .tl_set:N = \l_publication_doi_tl,
   doi-prefix    .tl_set:N = \l_publication_doiPrefix_tl,
+  doi-prefix    .initial:n = {DOI:~},
   arxiv         .tl_set:N = \l_publication_arxiv_tl,
   arxiv-prefix  .tl_set:N = \l_publication_arxivPrefix_tl,
+  arxiv-prefix  .initial:n = {arXiv:~},
+  style         .code:n = {
+    \keys_set:nn {publicationStyle} {#1}
+  },
 }
 \msg_new:nnn {academiccv} {publication / emptyTitle}
   { Publication:~the~title~can~not~be~empty. }
@@ -115,18 +120,7 @@
 \msg_new:nnn {academiccv} {publication / emptyYear}
   { Publication:~the~year~can~not~be~empty. }
 \NewDocumentCommand{\publication}{m}{
-  % Resetting fields
-  \tl_set_eq:NN \l_publication_title_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_authors_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_ref_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_where_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_shortWhere_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_year_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_doi_tl \c_empty_tl
-  \tl_set_eq:NN \l_publication_arxiv_tl \c_empty_tl
-  \tl_set:Nn \l_publication_doiPrefix_tl {DOI:~}
-  \tl_set:Nn \l_publication_arxivPrefix_tl {arXiv:~}
-
+  \group_begin:
   % Parsing arguments
   \keys_set:nn {publication} {#1}
 
@@ -143,6 +137,7 @@
 
   % Typesetting
   \printPublication
+  \group_end:
 }
 %    \end{macrocode}
 % \end{macro}

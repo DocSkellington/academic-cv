@@ -155,6 +155,9 @@
 % where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
 % coming from \Cref{tab:makecvtitle}.
 % By default, all values are empty and, thus, not displayed.
+% It is possible to overwrite style directly within this command.
+% See \Cref{tab:titleSetup} for the corresponding keys, and \cs{titleSetup} for
+% the command.
 %
 % This function also sets up the author and title metadata. If you desire to
 % modify this, call \cs{hypersetup} of package \verb!hyperref! after \cs{makecvtitle}.
@@ -179,6 +182,7 @@
 % \verb!zipcode! & Token list & Office's zipcode & No\\
 % \verb!city! & Token list & Office's city & No\\
 % \verb!country! & Token list & Office's country & No\\
+% \verb!style! & Key-value pairs & Overwrites style & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{makecvtitle}.}%
@@ -466,6 +470,9 @@
 % where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
 % coming from \Cref{tab:publication}.
 % By default, all values are empty and, thus, not displayed.
+% It is possible to overwrite some styles specifically for one publication.
+% See \Cref{tab:publicationSetup} for the corresponding keys, and
+% \cs{publicationSetup} for the command.
 % \end{function}
 %
 % \begin{table}
@@ -484,6 +491,7 @@
 % \verb!doi-prefix! & Token list & What to print before the DOI & No\\
 % \verb!arxiv! & Token list & The arXiv DOI & No\\
 % \verb!arxiv-prefix! & Token list & What to print before the arXiv DOI & No\\
+% \verb!style! & Key-value pairs & Overwrite style & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{publication}.}%

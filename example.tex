@@ -17,7 +17,7 @@
 
   {\bfseries
   This example is purposefully visually horrible in order to illustrate how to
-  use the setup commands.
+  use the commands.
   }
 
   \makecvtitle{
@@ -69,6 +69,19 @@
     country = Nowhere,
   }
 
+  \makecvtitle{
+    author = John Who,
+    position = Doctor,
+    affiliations = {Secret Inc., Can't Tell},
+    email = john.who@secret.com,
+    zipcode = 987654,
+    city = Middle,
+    country = Nowhere,
+    style = { % It is overwrite some styles in the same command
+      author = {\color{green}}
+    }
+  }
+
   \section{Work experience}
   Please fill me!
 
@@ -109,6 +122,17 @@
     title = {Exterminate!},
     authors = {Supreme Davros},
     year = {8743},
+    style = {  % It is possible to override the style for one specific publication
+      title = {\scshape}
+    },
+  }
+
+  % If a publication overwrites some style variables, they are restored to their
+  % previous value for the next publications (i.e., the overwrites are local)
+  \publication{
+    title = {Are you my mommy?},
+    authors = {Some Kids},
+    year = {1942},
   }
 
   \subsubsection{Test}
