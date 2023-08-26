@@ -32,6 +32,8 @@
 %<class>\RequirePackage{fontawesome5}
 %<class>\RequirePackage[compact]{titlesec}
 %<class>\RequirePackage{tikz}
+%<class>\RequirePackage{fancyhdr}
+%<class>\RequirePackage{lastpage}
 %
 %<class>\RequirePackage{academiccv-section}
 %<class>\RequirePackage{academiccv-title}
@@ -1394,6 +1396,15 @@
 }
 %    \end{macrocode}
 % \end{macro}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \lfoot{\l_title_author_tl}
+  \cfoot{}
+  \rfoot{{\normalfont\color{gray}\slshape \thepage / \pageref*{LastPage}}}
+}
+\renewcommand{\headrulewidth}{0pt}
+\pagestyle{plain}
 
 \ExplSyntaxOff
 
