@@ -1,5 +1,4 @@
 build:
-	mkdir -p tests/
 	latex academiccv.ins
 
 doc: build
