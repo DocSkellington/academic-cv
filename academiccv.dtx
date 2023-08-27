@@ -729,7 +729,8 @@
 % \toprule
 % Key & Value type & Details & Required\\
 % \midrule
-% \verb!year! & Token list & Job's year(s) & No\\
+% \verb!start! & Token list & Job's starting date & No\\
+% \verb!end! & Token list & Job's ending date & No\\
 % \verb!title! & Token list & Job's title & No\\
 % \verb!affiliation! & Token list & Job's affiliation & No\\
 % \verb!description! & Token list & Job's description & No\\
@@ -759,7 +760,8 @@
 % \toprule
 % Key & Value type & Details & Default value\\
 % \midrule
-% \verb!year! & Token list & Style for the job's year(s) & \verb!{\bfseries}!\\
+% \verb!start! & Token list & Style for the job's starting date & \verb!{\bfseries}!\\
+% \verb!end! & Token list & Style for the job's ending date & \verb!{\bfseries}!\\
 % \verb!title! & Token list & Style for the job's title & \verb!{\bfseries}!\\
 % \verb!affiliation! & Token list & Style for the job's affilition & \verb!{\small}!\\
 % \verb!description! & Token list & Style for the job's description & \verb!{\small}!\\
@@ -777,7 +779,8 @@
 % \subsection{Fields and Styles}
 %
 % \begin{variable}{
-%   \l_job_year_tl,
+%   \l_job_start_tl,
+%   \l_job_end_tl,
 %   \l_job_title_tl,
 %   \l_job_affiliation_tl,
 %   \l_job_description_tl,
@@ -787,8 +790,12 @@
 % in the fields.
 % \end{variable}
 %
-% \begin{variable}{\l_job_yearStyle_tl}
-% The style for the \verb!year! field.
+% \begin{variable}{\l_job_startStyle_tl}
+% The style for the \verb!start! field.
+% Initially equals to \verb!{\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_job_endStyle_tl}
+% The style for the \verb!end! field.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_job_titleStyle_tl}
@@ -813,7 +820,8 @@
 %     \cs{marginForJob}
 %   \end{syntax}
 % Typesets the content of the margin part for a job.
-% By default, it displays the year and affilition, each on their own line.
+% By default, it displays the starting date followed by a -- and the ending date.
+% Then, on a new line, affilition is shown.
 % \end{function}
 %
 % \begin{function}{\mainForJob}

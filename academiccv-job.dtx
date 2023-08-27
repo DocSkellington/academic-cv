@@ -30,7 +30,8 @@
 \skip_new:N \l_job_margin_skip
 \skip_new:N \l_job_space_skip
 \skip_new:N \l_job_vspaceAfter_skip
-\tl_new:N \l_job_yearStyle_tl
+\tl_new:N \l_job_startStyle_tl
+\tl_new:N \l_job_endStyle_tl
 \tl_new:N \l_job_titleStyle_tl
 \tl_new:N \l_job_affiliationStyle_tl
 \tl_new:N \l_job_descriptionStyle_tl
@@ -45,8 +46,10 @@
   space         .initial:n = {5pt},
   vspace-after  .skip_set:N = \l_job_vspaceAfter_skip,
   vspace-after  .initial:n = {6pt},
-  year          .tl_set:N = \l_job_yearStyle_tl,
-  year          .initial:n = {\bfseries},
+  start         .tl_set:N = \l_job_startStyle_tl,
+  start         .initial:n = {\bfseries},
+  end           .tl_set:N = \l_job_endStyle_tl,
+  end           .initial:n = {\bfseries},
   title         .tl_set:N = \l_job_titleStyle_tl,
   title         .initial:n = {\bfseries},
   affiliation   .tl_set:N = \l_job_affiliationStyle_tl,
@@ -61,7 +64,8 @@
 % \begin{macro}{marginForJob}
 %    \begin{macrocode}
 \NewDocumentCommand{\marginForJob}{}{
-  \print{job}{year}
+  \print{job}{start}[~--~]
+  \print{job}{end}
   \print[\\]{job}{affiliation}
 }
 %    \end{macrocode}
@@ -78,12 +82,13 @@
 
 % \begin{macro}{\job}
 %    \begin{macrocode}
-\tl_new:N \l_job_year_tl
+\tl_new:N \l_job_start_tl
 \tl_new:N \l_job_title_tl
 \tl_new:N \l_job_affiliation_tl
 \tl_new:N \l_job_description_tl
 \keys_define:nn {job} {
-  year          .tl_set:N = \l_job_year_tl,
+  start         .tl_set:N = \l_job_start_tl,
+  end           .tl_set:N = \l_job_end_tl,
   title         .tl_set:N = \l_job_title_tl,
   affiliation   .tl_set:N = \l_job_affiliation_tl,
   description   .tl_set:N = \l_job_description_tl,
