@@ -33,7 +33,7 @@
 \tl_new:N \l_supervision_yearStyle_tl
 \tl_new:N \l_supervision_nameStyle_tl
 \tl_new:N \l_supervision_roleStyle_tl
-\tl_new:N \l_supervision_affiliationStyle_tl
+\tl_new:N \l_supervision_organizationStyle_tl
 \tl_new:N \l_supervision_descriptionStyle_tl
 
 \keys_define:nn {supervisionStyle} {
@@ -52,8 +52,8 @@
   name          .initial:n = {\bfseries},
   role          .tl_set:N = \l_supervision_roleStyle_tl,
   role          .initial:n = {\itshape},
-  affiliation   .tl_set:N = \l_supervision_affiliationStyle_tl,
-  affiliation   .initial:n = {\footnotesize},
+  organization  .tl_set:N = \l_supervision_organizationStyle_tl,
+  organization  .initial:n = {\footnotesize},
   description   .tl_set:N = \l_supervision_descriptionStyle_tl,
   description   .initial:n = {\small},
 }
@@ -75,7 +75,7 @@
   \print{supervision}{name}
   \print[{\normalfont,~}]{supervision}{role}
   \print[\\]{supervision}{description}
-  \print[\\]{supervision}{affiliation}
+  \print[\\]{supervision}{organization}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -85,13 +85,13 @@
 \tl_new:N \l_supervision_year_tl
 \tl_new:N \l_supervision_name_tl
 \tl_new:N \l_supervision_role_tl
-\tl_new:N \l_supervision_affiliation_tl
+\tl_new:N \l_supervision_organization_tl
 \tl_new:N \l_supervision_description_tl
 \keys_define:nn {supervision} {
   year          .tl_set:N = \l_supervision_year_tl,
   name          .tl_set:N = \l_supervision_name_tl,
   role          .tl_set:N = \l_supervision_role_tl,
-  affiliation   .tl_set:N = \l_supervision_affiliation_tl,
+  organization  .tl_set:N = \l_supervision_organization_tl,
   description   .tl_set:N = \l_supervision_description_tl,
   style         .code:n = {
     \keys_set:nn {supervisionStyle} {#1}

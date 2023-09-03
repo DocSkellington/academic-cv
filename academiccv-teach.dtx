@@ -33,7 +33,7 @@
 \tl_new:N \l_teach_yearStyle_tl
 \tl_new:N \l_teach_courseStyle_tl
 \tl_new:N \l_teach_roleStyle_tl
-\tl_new:N \l_teach_affiliationStyle_tl
+\tl_new:N \l_teach_organizationStyle_tl
 \tl_new:N \l_teach_descriptionStyle_tl
 
 \keys_define:nn {teachStyle} {
@@ -52,8 +52,8 @@
   course        .initial:n = {\bfseries},
   role          .tl_set:N = \l_teach_roleStyle_tl,
   role          .initial:n = {\itshape},
-  affiliation   .tl_set:N = \l_teach_affiliationStyle_tl,
-  affiliation   .initial:n = {\footnotesize},
+  organization  .tl_set:N = \l_teach_organizationStyle_tl,
+  organization  .initial:n = {\footnotesize},
   description   .tl_set:N = \l_teach_descriptionStyle_tl,
   description   .initial:n = {\small},
 }
@@ -75,7 +75,7 @@
   \print{teach}{course}
   \print[{\normalfont,~}]{teach}{role}
   \print[\\]{teach}{description}
-  \print[\\]{teach}{affiliation}
+  \print[\\]{teach}{organization}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -85,13 +85,13 @@
 \tl_new:N \l_teach_year_tl
 \tl_new:N \l_teach_course_tl
 \tl_new:N \l_teach_role_tl
-\tl_new:N \l_teach_affiliation_tl
+\tl_new:N \l_teach_organization_tl
 \tl_new:N \l_teach_description_tl
 \keys_define:nn {teach} {
   year          .tl_set:N = \l_teach_year_tl,
   course        .tl_set:N = \l_teach_course_tl,
   role          .tl_set:N = \l_teach_role_tl,
-  affiliation   .tl_set:N = \l_teach_affiliation_tl,
+  organization  .tl_set:N = \l_teach_organization_tl,
   description   .tl_set:N = \l_teach_description_tl,
   style         .code:n = {
     \keys_set:nn {teachStyle} {#1}

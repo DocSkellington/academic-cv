@@ -192,7 +192,7 @@
 % \section{The \enquote{title} module}
 %
 % The title produced by the \verb!academiccv! class contains multiple fields,
-% such as the name, current affiliation(s) and position, email address(es),
+% such as the name, current organization(s) and position, email address(es),
 % links to a personnal website, etc.
 % To configure the values that must appear and typeset the title, simply use
 % the following command.
@@ -222,7 +222,7 @@
 % \midrule
 % \verb!author! & Token list & The author of the CV & Yes\\
 % \verb!position! & Token list & The current position of the author & No\\
-% \verb!affiliation! & Token list & The current affiliation of the author & No\\
+% \verb!organization! & Token list & The current organization of the author & No\\
 % \verb!photo! & Token list & The path to the portrait file to display. Can be omitted but horizontal space will still be reserved (i.e., the result will be ugly), if you do not modify the corresponding style (see \cs{titleSetup}) & No\\
 % \verb!email! & Token list & One email address. Can be present multiple times and all addresses will be accumulated. & No\\
 % \verb!website! & Token list & URL (without \verb!https://!) to the author's website & No\\
@@ -258,7 +258,7 @@
 % \midrule
 % \verb!author! & Token list & Style for the author & \verb!{\Huge\bfseries}!\\
 % \verb!position! & Token list & Style for the position & \verb!{\itshape}!\\
-% \verb!affiliation! & Token list & Style for the affiliation & \verb!{\small}!\\
+% \verb!organization! & Token list & Style for the organization & \verb!{\small}!\\
 % \verb!street! & Token list & Style for the street and number & \verb!{\small}!\\
 % \verb!zipcode! & Token list & Style for the zipcode & \verb!{\small}!\\
 % \verb!city! & Token list & Style for the city & \verb!{\small}!\\
@@ -284,7 +284,7 @@
 % \begin{variable}{
 %   \l_title_author_tl,
 %   \l_title_position_tl,
-%   \l_title_affiliation_tl,
+%   \l_title_organization_tl,
 %   \l_title_photo_tl,
 %   \l_title_email_clist,
 %   \l_title_website_tl,
@@ -310,8 +310,8 @@
 % The style for the \verb!position! field.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
-% \begin{variable}{\l_title_affiliationStyle_tl}
-% The style for the \verb!affiliation! field.
+% \begin{variable}{\l_title_organizationStyle_tl}
+% The style for the \verb!organization! field.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_streetStyle_tl}
@@ -361,7 +361,7 @@
 % \begin{variable}{\l_title_vspace_skip}
 % Governs the vertical space between the author and the position when typesetting
 % the title with the initial commands.
-% The vertical space between the position and the affiliation(s) is obtained by
+% The vertical space between the position and the organization(s) is obtained by
 % substracting \verb!.5em! from this variable.
 % See \cs{useVSpace}.
 % Initially equals to \verb!{1em}!.
@@ -437,9 +437,9 @@
 %     \cs{formatcvtitle}
 %   \end{syntax}
 % By default, creates two minipages that are displayed side by side.
-% The first (on the left) contains the author, position, affiliation, the
+% The first (on the left) contains the author, position, organization, the
 % office's address and the links, in this order such that
-% the author, position, and affiliation are centered.
+% the author, position, and organization are centered.
 % The second minipage (on the right) contains the portrait picture, and the
 % message for the last update.
 % \end{function}
@@ -508,11 +508,10 @@
 %
 % \section{The \enquote{publication} Module}
 %
-% The title produced by the \verb!academiccv! class contains multiple fields,
-% such as the name, current affiliation(s) and position, email address(es),
-% links to a personnal website, etc.
-% To configure the values that must appear and typeset the title, simply use
-% the following command.
+% A publication (in a journal, conference's proceedings, and so on) is identified
+% by its name, author(s), and publication year.
+% It is also possible to indicate the journal/conference/other (and its acronym),
+% the DOI, a link to arXiv, and a reference-like string (such as \verb![BPS22]!).
 %
 % \begin{function}{\publication}
 %   \begin{syntax}
@@ -732,7 +731,7 @@
 % \verb!start! & Token list & Job's starting date & No\\
 % \verb!end! & Token list & Job's ending date & No\\
 % \verb!title! & Token list & Job's title & No\\
-% \verb!affiliation! & Token list & Job's affiliation & No\\
+% \verb!organization! & Token list & Job's organization & No\\
 % \verb!description! & Token list & Job's description & No\\
 % \verb!style! & Key-value pairs & Overwrites style & No\\
 % \bottomrule
@@ -763,7 +762,7 @@
 % \verb!start! & Token list & Style for the job's starting date & \verb!{\bfseries}!\\
 % \verb!end! & Token list & Style for the job's ending date & \verb!{\bfseries}!\\
 % \verb!title! & Token list & Style for the job's title & \verb!{\bfseries}!\\
-% \verb!affiliation! & Token list & Style for the job's affilition & \verb!{\small}!\\
+% \verb!organization! & Token list & Style for the job's affilition & \verb!{\small}!\\
 % \verb!description! & Token list & Style for the job's description & \verb!{\small}!\\
 % \midrule
 % \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
@@ -782,7 +781,7 @@
 %   \l_job_start_tl,
 %   \l_job_end_tl,
 %   \l_job_title_tl,
-%   \l_job_affiliation_tl,
+%   \l_job_organization_tl,
 %   \l_job_description_tl,
 % }
 % Each field variable corresponds to a key of \Cref{tab:job}.
@@ -802,8 +801,8 @@
 % The style for the \verb!title! field.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
-% \begin{variable}{\l_job_affiliationStyle_tl}
-% The style for the \verb!affiliation! field.
+% \begin{variable}{\l_job_organizationStyle_tl}
+% The style for the \verb!organization! field.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_job_descriptionStyle_tl}
@@ -977,7 +976,7 @@
 % \verb!year! & Token list & Course's year(s) & No\\
 % \verb!course! & Token list & Course's name & No\\
 % \verb!role! & Token list & Role played in the course & No\\
-% \verb!affiliation! & Token list & In which school & No\\
+% \verb!organization! & Token list & In which school & No\\
 % \verb!description! & Token list & Course's description & No\\
 % \verb!style! & Key-value pairs & Overwrites style & No\\
 % \bottomrule
@@ -1008,7 +1007,7 @@
 % \verb!year! & Token list & Style for the year(s) & \verb!{\bfseries}!\\
 % \verb!course! & Token list & Style for the course's name & \verb!{\bfseries}!\\
 % \verb!role! & Token list & Style for the role played in the course & \verb!{\itshape}!\\
-% \verb!affiliation! & Token list & Style for the affiliation & \verb!{\footnotesize}!\\
+% \verb!organization! & Token list & Style for the organization & \verb!{\footnotesize}!\\
 % \verb!description! & Token list & Style for the description & \verb!{\small}!\\
 % \midrule
 % \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
@@ -1027,7 +1026,7 @@
 %   \l_teach_year_tl,
 %   \l_teach_course_tl,
 %   \l_teach_role_tl,
-%   \l_teach_affiliation_tl,
+%   \l_teach_organization_tl,
 %   \l_teach_description_tl,
 % }
 % Each field variable corresponds to a key of \Cref{tab:teach}.
@@ -1047,8 +1046,8 @@
 % The style for the \verb!role! field.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
-% \begin{variable}{\l_teach_affiliationStyle_tl}
-% The style for the \verb!affiliation! field.
+% \begin{variable}{\l_teach_organizationStyle_tl}
+% The style for the \verb!organization! field.
 % Initially equals to \verb!{\footnotesize}!.
 % \end{variable}
 % \begin{variable}{\l_teach_descriptionStyle_tl}
@@ -1104,7 +1103,7 @@
 % \verb!year! & Token list & Year(s) & No\\
 % \verb!name! & Token list & Supervised's name & No\\
 % \verb!role! & Token list & Role played in the supervision & No\\
-% \verb!affiliation! & Token list & In which school & No\\
+% \verb!organization! & Token list & In which school & No\\
 % \verb!description! & Token list & Description & No\\
 % \verb!style! & Key-value pairs & Overwrites style & No\\
 % \bottomrule
@@ -1135,7 +1134,7 @@
 % \verb!year! & Token list & Style for the year(s) & \verb!{\bfseries}!\\
 % \verb!name! & Token list & Style for the supervised's name & \verb!{\bfseries}!\\
 % \verb!role! & Token list & Style for the role played in the supervision & \verb!{\itshape}!\\
-% \verb!affiliation! & Token list & Style for the affiliation & \verb!{\footnotesize}!\\
+% \verb!organization! & Token list & Style for the organization & \verb!{\footnotesize}!\\
 % \verb!description! & Token list & Style for the description & \verb!{\small}!\\
 % \midrule
 % \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
@@ -1154,7 +1153,7 @@
 %   \l_supervision_year_tl,
 %   \l_supervision_name_tl,
 %   \l_supervision_role_tl,
-%   \l_supervision_affiliation_tl,
+%   \l_supervision_organization_tl,
 %   \l_supervision_description_tl,
 % }
 % Each field variable corresponds to a key of \Cref{tab:supervision}.
@@ -1174,8 +1173,8 @@
 % The style for the \verb!role! field.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
-% \begin{variable}{\l_supervision_affiliationStyle_tl}
-% The style for the \verb!affiliation! field.
+% \begin{variable}{\l_supervision_organizationStyle_tl}
+% The style for the \verb!organization! field.
 % Initially equals to \verb!{\footnotesize}!.
 % \end{variable}
 % \begin{variable}{\l_supervision_descriptionStyle_tl}

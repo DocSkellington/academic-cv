@@ -28,7 +28,7 @@
 %    \begin{macrocode}
 \tl_new:N \l_title_authorStyle_tl
 \tl_new:N \l_title_positionStyle_tl
-\tl_new:N \l_title_affiliationStyle_tl
+\tl_new:N \l_title_organizationStyle_tl
 \tl_new:N \l_title_streetStyle_tl
 \tl_new:N \l_title_zipcodeStyle_tl
 \tl_new:N \l_title_cityStyle_tl
@@ -48,8 +48,8 @@
   author          .initial:n = {\Huge\bfseries},
   position        .tl_set:N = \l_title_positionStyle_tl,
   position        .initial:n = {\itshape},
-  affiliation    .tl_set:N = \l_title_affiliationStyle_tl,
-  affiliation    .initial:n = {\small},
+  organization    .tl_set:N = \l_title_organizationStyle_tl,
+  organization    .initial:n = {\small},
 
   address         .code:n = { % Easy way of defining each part at once
     \tl_set:Nn \l_title_streetStyle_tl {#1}
@@ -103,7 +103,7 @@
 %    \begin{macrocode}
 \tl_new:N \l_title_author_tl
 \tl_new:N \l_title_position_tl
-\tl_new:N \l_title_affiliation_tl
+\tl_new:N \l_title_organization_tl
 \tl_new:N \l_title_photo_tl
 \clist_new:N \l_title_email_clist
 \tl_new:N \l_title_website_tl
@@ -118,7 +118,7 @@
 \keys_define:nn {title}{
   author          .tl_set:N = \l_title_author_tl,
   position        .tl_set:N = \l_title_position_tl,
-  affiliation    .tl_set:N = \l_title_affiliation_tl,
+  organization    .tl_set:N = \l_title_organization_tl,
   photo           .tl_set:N = \l_title_photo_tl,
   email           .code:n = {
     \clist_put_right:Nn \l_title_email_clist {#1}
@@ -241,7 +241,7 @@
       \useVSpace{title}{vspace}
       \print{title}{position}
       \useVSpace{title}{vspace}[-.5em]
-      \print{title}{affiliation}
+      \print{title}{organization}
     \end{center}
 
     \formatAddress

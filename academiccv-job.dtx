@@ -33,7 +33,7 @@
 \tl_new:N \l_job_startStyle_tl
 \tl_new:N \l_job_endStyle_tl
 \tl_new:N \l_job_titleStyle_tl
-\tl_new:N \l_job_affiliationStyle_tl
+\tl_new:N \l_job_organizationStyle_tl
 \tl_new:N \l_job_descriptionStyle_tl
 
 \keys_define:nn {jobStyle} {
@@ -52,8 +52,8 @@
   end           .initial:n = {\bfseries},
   title         .tl_set:N = \l_job_titleStyle_tl,
   title         .initial:n = {\bfseries},
-  affiliation   .tl_set:N = \l_job_affiliationStyle_tl,
-  affiliation   .initial:n = {\small},
+  organization  .tl_set:N = \l_job_organizationStyle_tl,
+  organization  .initial:n = {\small},
   description   .tl_set:N = \l_job_descriptionStyle_tl,
   description   .initial:n = {\small},
 }
@@ -66,7 +66,7 @@
 \NewDocumentCommand{\marginForJob}{}{
   \print{job}{start}[~--~]
   \print{job}{end}
-  \print[\\]{job}{affiliation}
+  \print[\\]{job}{organization}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -84,13 +84,13 @@
 %    \begin{macrocode}
 \tl_new:N \l_job_start_tl
 \tl_new:N \l_job_title_tl
-\tl_new:N \l_job_affiliation_tl
+\tl_new:N \l_job_organization_tl
 \tl_new:N \l_job_description_tl
 \keys_define:nn {job} {
   start         .tl_set:N = \l_job_start_tl,
   end           .tl_set:N = \l_job_end_tl,
   title         .tl_set:N = \l_job_title_tl,
-  affiliation   .tl_set:N = \l_job_affiliation_tl,
+  organization  .tl_set:N = \l_job_organization_tl,
   description   .tl_set:N = \l_job_description_tl,
   style         .code:n = {
     \keys_set:nn {jobStyle} {#1}
