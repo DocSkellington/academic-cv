@@ -33,7 +33,9 @@
 \tl_new:N \l_publication_shortWhereStyle_tl
 \tl_new:N \l_publication_yearStyle_tl
 \tl_new:N \l_publication_doiStyle_tl
+\tl_new:N \l_publication_doiPrefix_tl
 \tl_new:N \l_publication_arxivStyle_tl
+\tl_new:N \l_publication_arxivPrefix_tl
 
 \keys_define:nn {publicationStyle} {
   title         .tl_set:N = \l_publication_titleStyle_tl,
@@ -50,8 +52,12 @@
   shortWhere    .initial:n = {\itshape},
   doi           .tl_set:N = \l_publication_doiStyle_tl,
   doi           .initial:n = {\normalfont},
+  doi-prefix    .tl_set:N = \l_publication_doiPrefix_tl,
+  doi-prefix    .initial:n = {DOI:~},
   arxiv         .tl_set:N = \l_publication_arxivStyle_tl,
   arxiv         .initial:n = {\normalfont},
+  arxiv-prefix  .tl_set:N = \l_publication_arxivPrefix_tl,
+  arxiv-prefix  .initial:n = {arXiv:~},
 }
 \NewDocumentCommand{\publicationSetup}{m}{\keys_set:nn {publicationStyle} {#1}}
 %    \end{macrocode}
@@ -93,9 +99,7 @@
 \tl_new:N \l_publication_where_tl
 \tl_new:N \l_publication_shortWhere_tl
 \tl_new:N \l_publication_doi_tl
-\tl_new:N \l_publication_doiPrefix_tl
 \tl_new:N \l_publication_arxiv_tl
-\tl_new:N \l_publication_arxivPrefix_tl
 \keys_define:nn {publication} {
   title         .tl_set:N = \l_publication_title_tl,
   authors       .tl_set:N = \l_publication_authors_tl,
@@ -104,11 +108,7 @@
   where         .tl_set:N = \l_publication_where_tl,
   shortWhere    .tl_set:N = \l_publication_shortWhere_tl,
   doi           .tl_set:N = \l_publication_doi_tl,
-  doi-prefix    .tl_set:N = \l_publication_doiPrefix_tl,
-  doi-prefix    .initial:n = {DOI:~},
   arxiv         .tl_set:N = \l_publication_arxiv_tl,
-  arxiv-prefix  .tl_set:N = \l_publication_arxivPrefix_tl,
-  arxiv-prefix  .initial:n = {arXiv:~},
   style         .code:n = {
     \keys_set:nn {publicationStyle} {#1}
   },

@@ -541,9 +541,7 @@
 % \verb!where! & Token list & The conference/journal & No\\
 % \verb!shortWhere! & Token list & The acronym of the conference/journal & No\\
 % \verb!doi! & Token list & The DOI & No\\
-% \verb!doi-prefix! & Token list & What to print before the DOI & No\\
 % \verb!arxiv! & Token list & The arXiv DOI & No\\
-% \verb!arxiv-prefix! & Token list & What to print before the arXiv DOI & No\\
 % \verb!style! & Key-value pairs & Overwrite style & No\\
 % \bottomrule
 % \end{tabular}
@@ -574,7 +572,9 @@
 % \verb!where! & Token list & Style for the conference/journal & \verb!{\itshape}!\\
 % \verb!shortWhere! & Token list & Style for the acronym of conference/journal & \verb!{\itshape}!\\
 % \verb!doi! & Token list & Style for the DOI link & \verb!{\normalfont}!\\
+% \verb!doi-prefix! & Token list & What to print before the DOI & \verb!{DOI:\ }!\\
 % \verb!arxiv! & Token list & Style for the arXiv link & \verb!{\normalfont}!\\
+% \verb!arxiv-prefix! & Token list & What to print before the arXiv DOI & \verb!{arXiv:\ }!\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{publicationSetup}.}%
@@ -591,9 +591,7 @@
 %   \l_publication_where_tl,
 %   \l_publication_shortWhere_tl,
 %   \l_publication_doi_tl,
-%   \l_publication_doiPrefix_tl,
 %   \l_publication_arxiv_tl,
-%   \l_publication_arxivPrefix_tl,
 % }
 % Each field variable corresponds to a key of \Cref{tab:publication}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
@@ -628,9 +626,19 @@
 % The style for the \verb!doi! field.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
+% \begin{variable}{\l_publication_doiPrefix_tl}
+% The text just before the DOI.
+% Its style is also dictated by \cs{l_publication_doiStyle_tl}.
+% Initially equals to \verb!{DOI:\ }!.
+% \end{variable}
 % \begin{variable}{\l_publication_arxivStyle_tl}
 % The style for the \verb!arxiv! field.
 % Initially equals to \verb!{\normalfont}!.
+% \end{variable}
+% \begin{variable}{\l_publication_arxivPrefix_tl}
+% The text just before the arXiv DOI.
+% Its style is also dictated by \cs{l_publication_arxivStyle_tl}.
+% Initially equals to \verb!{arXiv:\ }!.
 % \end{variable}
 %
 % \subsection{Typesetting Commands}
