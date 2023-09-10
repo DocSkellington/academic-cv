@@ -987,6 +987,7 @@
 % \verb!year! & Token list & Course's year(s) & No\\
 % \verb!course! & Token list & Course's name & No\\
 % \verb!role! & Token list & Role played in the course & No\\
+% \verb!level! & Token list & Course's level (to who it is teached) & No\\
 % \verb!organization! & Token list & In which school & No\\
 % \verb!description! & Token list & Course's description & No\\
 % \verb!style! & Key-value pairs & Overwrites style & No\\
@@ -1018,6 +1019,7 @@
 % \verb!year! & Token list & Style for the year(s) & \verb!{\bfseries}!\\
 % \verb!course! & Token list & Style for the course's name & \verb!{\bfseries}!\\
 % \verb!role! & Token list & Style for the role played in the course & \verb!{\itshape}!\\
+% \verb!level! & Token list & Style for the course's level & \verb!{\normalfont}!\\
 % \verb!organization! & Token list & Style for the organization & \verb!{\footnotesize}!\\
 % \verb!description! & Token list & Style for the description & \verb!{\small}!\\
 % \midrule
@@ -1037,6 +1039,7 @@
 %   \l_teach_year_tl,
 %   \l_teach_course_tl,
 %   \l_teach_role_tl,
+%   \l_teach_level_tl,
 %   \l_teach_organization_tl,
 %   \l_teach_description_tl,
 % }
@@ -1056,6 +1059,10 @@
 % \begin{variable}{\l_teach_roleStyle_tl}
 % The style for the \verb!role! field.
 % Initially equals to \verb!{\itshape}!.
+% \end{variable}
+% \begin{variable}{\l_teach_levelStyle_tl}
+% The style for the \verb!level! field.
+% Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_teach_organizationStyle_tl}
 % The style for the \verb!organization! field.
@@ -1083,7 +1090,7 @@
 %     \cs{mainForTalk}
 %   \end{syntax}
 % Typesets the content of the main part for a course.
-% By default, it displays the course's name and the role on the same line,
+% By default, it displays the course's name, level, and the role on the same line,
 % followed by the description, and the affilition,
 % each on their own line.
 % \end{function}

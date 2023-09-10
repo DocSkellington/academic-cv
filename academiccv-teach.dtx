@@ -33,6 +33,7 @@
 \tl_new:N \l_teach_yearStyle_tl
 \tl_new:N \l_teach_courseStyle_tl
 \tl_new:N \l_teach_roleStyle_tl
+\tl_new:N \l_teach_levelStyle_tl
 \tl_new:N \l_teach_organizationStyle_tl
 \tl_new:N \l_teach_descriptionStyle_tl
 
@@ -52,6 +53,8 @@
   course        .initial:n = {\bfseries},
   role          .tl_set:N = \l_teach_roleStyle_tl,
   role          .initial:n = {\itshape},
+  level         .tl_set:N = \l_teach_levelStyle_tl,
+  level         .initial:n = {\normalfont},
   organization  .tl_set:N = \l_teach_organizationStyle_tl,
   organization  .initial:n = {\footnotesize},
   description   .tl_set:N = \l_teach_descriptionStyle_tl,
@@ -73,6 +76,7 @@
 %    \begin{macrocode}
 \NewDocumentCommand{\mainForTeach}{}{
   \print{teach}{course}
+  \print[{\normalfont,~}]{teach}{level}
   \print[{\normalfont,~}]{teach}{role}
   \print[\\]{teach}{description}
   \print[\\]{teach}{organization}
@@ -85,12 +89,14 @@
 \tl_new:N \l_teach_year_tl
 \tl_new:N \l_teach_course_tl
 \tl_new:N \l_teach_role_tl
+\tl_new:N \l_teach_level_tl
 \tl_new:N \l_teach_organization_tl
 \tl_new:N \l_teach_description_tl
 \keys_define:nn {teach} {
   year          .tl_set:N = \l_teach_year_tl,
   course        .tl_set:N = \l_teach_course_tl,
   role          .tl_set:N = \l_teach_role_tl,
+  level         .tl_set:N = \l_teach_level_tl,
   organization  .tl_set:N = \l_teach_organization_tl,
   description   .tl_set:N = \l_teach_description_tl,
   style         .code:n = {
