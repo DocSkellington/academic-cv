@@ -15,8 +15,7 @@ Contributions under the form of pull requests are welcomed!
 
 ## Installation
 
-To obtain the `.cls` and `.sty` files from the `.dtx` files, it is sufficient to
-run `make`.
+Download a release archive or run `make` to obtain the `.cls` and `.sty` files.
 Then, copy the `.cls` and the `.sty` files in a folder that is considered by your
 LaTeX distribution.
 This can be the folder containing your CV file.
@@ -52,4 +51,3 @@ typesetting commands and how to change the styles.
 
 ## License
 This work is licensed under LaTeX Project Public License (LPPL).
-See 
