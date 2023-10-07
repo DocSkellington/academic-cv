@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-publication}{2023/08/26}{v1.0}{Academic curriculum vitae: publications}
+%<package>\ProvidesExplPackage{academiccv-publication}{2023/10/07}{v1.0}{Academic curriculum vitae: publications}
 
 \ExplSyntaxOn
 
@@ -36,6 +36,7 @@
 \tl_new:N \l_publication_doiPrefix_tl
 \tl_new:N \l_publication_arxivStyle_tl
 \tl_new:N \l_publication_arxivPrefix_tl
+\tl_new:N \l_publication_noteStyle_tl
 
 \keys_define:nn {publicationStyle} {
   title         .tl_set:N = \l_publication_titleStyle_tl,
@@ -58,6 +59,8 @@
   arxiv         .initial:n = {\normalfont},
   arxiv-prefix  .tl_set:N = \l_publication_arxivPrefix_tl,
   arxiv-prefix  .initial:n = {arXiv:~},
+  note          .tl_set:N = \l_publication_noteStyle_tl,
+  note          .initial:n = {\normalfont},
 }
 \NewDocumentCommand{\publicationSetup}{m}{\keys_set:nn {publicationStyle} {#1}}
 %    \end{macrocode}
@@ -86,6 +89,7 @@
   \print{publication}{year}[.]
   \printURL[~\l_publication_doiPrefix_tl]{publication}{doi}{https\c_colon_str//doi.org/}[.]
   \printURL[~\l_publication_arxivPrefix_tl]{publication}{arxiv}{https\c_colon_str//doi.org/}[.]
+  \print[~]{publication}{note}[.]
 }
 %    \end{macrocode}
 % \end{macro}
@@ -100,6 +104,7 @@
 \tl_new:N \l_publication_shortWhere_tl
 \tl_new:N \l_publication_doi_tl
 \tl_new:N \l_publication_arxiv_tl
+\tl_new:N \l_publication_note_tl
 \keys_define:nn {publication} {
   title         .tl_set:N = \l_publication_title_tl,
   authors       .tl_set:N = \l_publication_authors_tl,
@@ -109,6 +114,7 @@
   shortWhere    .tl_set:N = \l_publication_shortWhere_tl,
   doi           .tl_set:N = \l_publication_doi_tl,
   arxiv         .tl_set:N = \l_publication_arxiv_tl,
+  note          .tl_set:N = \l_publication_note_tl,
   style         .code:n = {
     \keys_set:nn {publicationStyle} {#1}
   },
