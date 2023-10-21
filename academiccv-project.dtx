@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-project}{2023/08/26}{v1.0}{Academic curriculum vitae: project}
+%<package>\ProvidesExplPackage{academiccv-project}{2023/10/15}{v1.1}{Academic curriculum vitae: project}
 
 \ExplSyntaxOn
 
@@ -32,7 +32,9 @@
 \skip_new:N \l_project_vspaceAfter_skip
 \tl_new:N \l_project_shortNameStyle_tl
 \tl_new:N \l_project_nameStyle_tl
-\tl_new:N \l_project_roletyle_tl
+\tl_new:N \l_project_roleStyle_tl
+\tl_new:N \l_project_homepageStyle_tl
+\tl_new:N \l_project_artifactStyle_tl
 \tl_new:N \l_project_descriptionStyle_tl
 
 \keys_define:nn {projectStyle} {
@@ -51,6 +53,10 @@
   name          .initial:n = {\bfseries},
   role          .tl_set:N = \l_project_roleStyle_tl,
   role          .initial:n = {\normalfont},
+  homepage       .tl_set:N = \l_project_homepageStyle_tl,
+  homepage       .initial:n = {\footnotesize},
+  artifact       .tl_set:N = \l_project_artifactStyle_tl,
+  artifact       .initial:n = {\footnotesize},
   description   .tl_set:N = \l_project_descriptionStyle_tl,
   description   .initial:n = {\small},
 }
@@ -72,6 +78,8 @@
   \print{project}{name}
   \print[{\normalfont,~}]{project}{role}
   \print[\\]{project}{description}
+  \printURL[\\Homepage:~]{project}{homepage}{}
+  \printURL[\\Artifact:~]{project}{artifact}{}
 }
 %    \end{macrocode}
 % \end{macro}
@@ -81,11 +89,15 @@
 \tl_new:N \l_project_shortName_tl
 \tl_new:N \l_project_name_tl
 \tl_new:N \l_project_role_tl
+\tl_new:N \l_project_homepage_tl
+\tl_new:N \l_project_artifact_tl
 \tl_new:N \l_project_description_tl
 \keys_define:nn {project} {
   shortName     .tl_set:N = \l_project_shortName_tl,
   name          .tl_set:N = \l_project_name_tl,
   role          .tl_set:N = \l_project_role_tl,
+  homepage      .tl_set:N = \l_project_homepage_tl,
+  artifact      .tl_set:N = \l_project_artifact_tl,
   description   .tl_set:N = \l_project_description_tl,
   style         .code:n = {
     \keys_set:nn {projectStyle} {#1}
