@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-publication}{2023/10/07}{v1.0}{Academic curriculum vitae: publications}
+%<package>\ProvidesExplPackage{academiccv-publication}{2023/10/22}{v1.1}{Academic curriculum vitae: publications}
 
 \ExplSyntaxOn
 
@@ -69,7 +69,7 @@
 % \begin{macro}{\printPublication}
 %    \begin{macrocode}
 \NewDocumentCommand{\printPublication}{}{
-  \noindent
+  \par\noindent
   \print[{[}]{publication}{ref}[{]}\ ]
   \print{publication}{title}[.] ~
   \print{publication}{authors}[.] ~
@@ -89,7 +89,7 @@
   \print{publication}{year}[.]
   \printURL[~\l_publication_doiPrefix_tl]{publication}{doi}{https\c_colon_str//doi.org/}[.]
   \printURL[~\l_publication_arxivPrefix_tl]{publication}{arxiv}{https\c_colon_str//doi.org/}[.]
-  \print[~]{publication}{note}[.]
+  \print[~]{publication}{note}
 }
 %    \end{macrocode}
 % \end{macro}
