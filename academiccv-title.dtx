@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-title}{2023/08/26}{v1.0}{Academic curriculum vitae: title header}
+%<package>\ProvidesExplPackage{academiccv-title}{2023/10/22}{v1.1}{Academic curriculum vitae: title header}
 
 \ExplSyntaxOn
 
@@ -42,6 +42,7 @@
 
 \skip_new:N \l_title_vspace_skip
 \fp_new:N \l_title_portionForPhoto_fp
+\skip_new:N \l_title_spaceTitlePhoto_skip
 
 \keys_define:nn   {titleStyle} {
   author          .tl_set:N = \l_title_authorStyle_tl,
@@ -91,6 +92,8 @@
   vertical-space  .initial:n = {1em},
   portion-photo   .fp_set:N = \l_title_portionForPhoto_fp,
   portion-photo   .initial:n = {.25},
+  margin-photo    .skip_set:N = \l_title_spaceTitlePhoto_skip,
+  margin-photo    .initial:n = {15pt},
 }
 \NewDocumentCommand{\titleSetup}{m}{
   \keys_set:nn {titleStyle} {#1}
@@ -159,7 +162,7 @@
   }
 
   \fp_set:Nn \l_title_sizePhoto_fp {\l_title_portionForPhoto_fp * \dim_to_fp:n \linewidth}
-  \fp_set:Nn \l_title_sizeText_fp {\dim_to_fp:n \linewidth - \l_title_sizePhoto_fp - 15pt}
+  \fp_set:Nn \l_title_sizeText_fp {\dim_to_fp:n \linewidth - \l_title_sizePhoto_fp - \dim_to_fp:n \l_title_spaceTitlePhoto_skip}
 
   \dim_set:Nn \l_title_sizePhoto_dim {\fp_to_dim:N \l_title_sizePhoto_fp}
   \dim_set:Nn \l_title_sizeText_dim {\fp_to_dim:N \l_title_sizeText_fp}
