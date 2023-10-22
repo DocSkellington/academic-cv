@@ -8,3 +8,8 @@
 
   - Publication: start paragraph.
   - Publication: a dot is not automatically added after the note.
+
+## Other
+
+  - Section: renamed `rectangle/width` into `rectangle/length`
+  - Section: renamed `before/width` and `after/width` into `before/thickness` and `after/thickness`
