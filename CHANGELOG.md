@@ -6,6 +6,7 @@
   - Section: renamed `rectangle/width` into `rectangle/length`.
   - Section: renamed `before/width` and `after/width` into `before/thickness` and `after/thickness`.
   - Title: margin between text and photo can be changed.
+  - Added Service (`academiccv-service`).
 
 ## Bug fixes
 

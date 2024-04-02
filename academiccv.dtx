@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2023 by Gaëtan Staquet
+% Copyright (C) 2023-2024 by Gaëtan Staquet
 % -----------------------------------
 %
 % This file may be distributed and/or modified under the
@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}
-%<class>\ProvidesExplClass{academiccv}{2023/10/15}{v1.1}{Academic curriculum vitae document class}
+%<class>\ProvidesExplClass{academiccv}{2024/04/02}{v1.1}{Academic curriculum vitae document class}
 %
 %<class>\LoadClass{article}
 %<class>\RequirePackage{etoolbox}
@@ -45,6 +45,7 @@
 %<class>\RequirePackage{academiccv-supervision}
 %<class>\RequirePackage{academiccv-project}
 %<class>\RequirePackage{academiccv-award}
+%<class>\RequirePackage{academiccv-service}
 %
 %<*driver>
 \documentclass[a4paper]{l3doc}
@@ -1444,19 +1445,124 @@
 %
 % \subsection{Typesetting Commands}
 %
-% \begin{function}{\marginForJob}
+% \begin{function}{\marginForAward}
 %   \begin{syntax}
-%     \cs{marginForJob}
+%     \cs{marginForAward}
 %   \end{syntax}
-% Typesets the content of the margin part for a job.
+% Typesets the content of the margin part for an award.
 % By default, it displays the year.
 % \end{function}
 %
-% \begin{function}{\mainForJob}
+% \begin{function}{\mainForAward}
 %   \begin{syntax}
-%     \cs{mainForJob}
+%     \cs{mainForAward}
 %   \end{syntax}
-% Typesets the content of the main part for a job.
+% Typesets the content of the main part for an award.
+% By default, it displays the description.
+% \end{function}
+%
+% \section{The \enquote{service} module}
+%
+% To typeset received collective and administrative responsibilities (or services
+% to the community), one can use generic CV items.
+% This module provides a nice interface to simplify typesetting.
+%
+% \begin{function}{\service}
+%   \begin{syntax}
+%     \cs{service} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:service}.
+% By default, all values are empty and, thus, not displayed.
+% It is possible to overwrite some styles specifically for one service.
+% See \Cref{tab:serviceSetup} for the corresponding keys, and
+% \cs{serviceSetup} for the command to define styles globally.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l l r}
+% \toprule
+% Key & Value type & Details & Required\\
+% \midrule
+% \verb!year! & Token list & Service's year & No\\
+% \verb!description! & Token list & Service's description & No\\
+% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{service}.}%
+% \label{tab:service}
+% \end{table}
+% 
+% Styles can be defined globally thanks to the following command.
+%
+% \begin{function}{\serviceSetup}
+%   \begin{syntax}
+%     \cs{serviceSetup} \marg{key-value pairs}
+%   \end{syntax}
+% where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
+% coming from \Cref{tab:serviceSetup}.
+% The size of the main part is automatically computed as the remaining horizontal
+% space on the line after substracting the margin size and the space between
+% the margin and the main part.
+% \end{function}
+%
+% \begin{table}
+% \centering
+% \begin{tabular}{l l p{140pt} r}
+% \toprule
+% Key & Value type & Details & Default value\\
+% \midrule
+% \verb!year! & Token list & Style for the service's year & \verb!{\bfseries}!\\
+% \verb!description! & Token list & Style for the service's description & \verb!{\normalfont}!\\
+% \midrule
+% \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
+% \verb!margin-size! & Skip & Size for the margin & \verb!{80pt}!\\
+% \verb!space! & Skip & Size between the margin and main content & \verb!{5pt}!\\
+% \verb!vspace-after! & Skip & Vertical space to add after the item & \verb!{6pt}!\\
+% \bottomrule
+% \end{tabular}
+% \caption{Keys and expected type for \cs{serviceSetup}.}%
+% \label{tab:serviceSetup}
+% \end{table}
+%
+% \subsection{Fields and Styles}
+%
+% \begin{variable}{
+%   \l_service_year_tl,
+%   \l_service_description_tl,
+% }
+% Each field variable corresponds to a key of \Cref{tab:service}.
+% See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
+% in the fields.
+% \end{variable}
+%
+% \begin{variable}{\l_service_yearStyle_tl}
+% The style for the \verb!year! field.
+% Initially equals to \verb!{\bfseries}!.
+% \end{variable}
+% \begin{variable}{\l_service_descriptionStyle_tl}
+% The style for the \verb!description! field.
+% Initially equals to \verb!{\normalfont}!.
+% \end{variable}
+% Variables tied to the \enquote{item} module are not displayed here, as they are
+% not meant to be accessed.
+%
+% \subsection{Typesetting Commands}
+%
+% \begin{function}{\marginForService}
+%   \begin{syntax}
+%     \cs{marginForService}
+%   \end{syntax}
+% Typesets the content of the margin part for a service.
+% By default, it displays the year.
+% \end{function}
+%
+% \begin{function}{\mainForService}
+%   \begin{syntax}
+%     \cs{mainForService}
+%   \end{syntax}
+% Typesets the content of the main part for a service.
 % By default, it displays the description.
 % \end{function}
 %
