@@ -32,6 +32,7 @@
 %<class>\RequirePackage{fontawesome5}
 %<class>\RequirePackage[compact]{titlesec}
 %<class>\RequirePackage{tikz}
+%<class>\RequirePackage[includeheadfoot]{geometry}
 %<class>\RequirePackage{fancyhdr}
 %<class>\RequirePackage{lastpage}
 %
@@ -212,6 +213,9 @@
 %
 % This function also sets up the author and title metadata. If you desire to
 % modify this, call \cs{hypersetup} of package \verb!hyperref! after \cs{makecvtitle}.
+%
+% Finally, the function defines the value of the globally accessible variable
+% \cs{l_author_tl} as the value of the author field.
 % \end{function}
 %
 % We do not forbid using multiple times \cs{makecvtitle} in a single document.
@@ -1646,9 +1650,10 @@
 %    \end{macrocode}
 % \end{macro}
 
+\tl_new:N \l_author_tl
 \fancypagestyle{plain}{
   \fancyhf{}
-  \lfoot{\l_title_author_tl}
+  \lfoot{\l_author_tl}
   \cfoot{}
   \rfoot{{\normalfont\color{gray}\textsl{\thepage/\pageref*{LastPage}}}}
 }

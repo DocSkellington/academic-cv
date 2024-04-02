@@ -12,3 +12,5 @@
 
   - Publication: start paragraph.
   - Publication: a dot is not automatically added after the note.
+  - Package geometry is imported (with option includeheadfoot) before fancyhdr to ensure that header and footer have the correct size.
+  - Name is correctly displayed in the footer.

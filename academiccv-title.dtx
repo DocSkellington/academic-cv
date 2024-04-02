@@ -160,6 +160,7 @@
     pdfauthor = \l_title_author_tl,
     pdftitle = Academic\ CV\ of\ \l_title_author_tl,
   }
+  \tl_gset_eq:NN \l_author_tl \l_title_author_tl
 
   \fp_set:Nn \l_title_sizePhoto_fp {\l_title_portionForPhoto_fp * \dim_to_fp:n \linewidth}
   \fp_set:Nn \l_title_sizeText_fp {\dim_to_fp:n \linewidth - \l_title_sizePhoto_fp - \dim_to_fp:n \l_title_spaceTitlePhoto_skip}
