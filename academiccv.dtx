@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}
-%<class>\ProvidesExplClass{academiccv}{2024/04/02}{v1.1}{Academic curriculum vitae document class}
+%<class>\ProvidesExplClass{academiccv}{2024/05/24}{v1.1}{Academic curriculum vitae document class}
 %
 %<class>\LoadClass{article}
 %<class>\RequirePackage{etoolbox}
@@ -54,9 +54,10 @@
 \usepackage{expl3}
 \usepackage{booktabs}
 \usepackage{hyperref}
-\usepackage{cleveref}
+\usepackage[nameinlink]{cleveref}
 \usepackage{csquotes}
 \usepackage{fontawesome5}
+\overfullrule=10pt
 \hypersetup{
   linkcolor = {blue},
 }
@@ -77,11 +78,10 @@
 % \begin{documentation}
 %
 % \begin{abstract}
-%   The academiccv class allows one to expose their academic career into a
-% curriculum vitae.
-% That is, the class defines easy-to-use commands for publications, projects,
-% supervisions, talks, courses, and so on.
-% It is also easy to change how the different values are typesetted.
+%   The \texttt{academiccv} class, alongside its packages, can be used to typeset
+% a \textit{curriculum vitae} of an academic career.
+% Easy to use and to configure commands for publications, projects,
+% supervisions, talks, courses, and so on, are defined.
 %
 % This work is inspired by the moderncv class.
 % \end{abstract}
@@ -90,34 +90,47 @@
 %
 % \section{Introduction}
 %
-% The \verb!academiccv! class is split into multiple \enquote{modules}, each
+% The \verb!academiccv! class is split into multiple packages, each
 % defining a set of commands geared towards a particular field of an academic
 % career.
-% All modules are automatically loaded when the class is used.
-% Any document that wants to use \verb!academiccv! simply needs to start with
-% \verb!\documentclass{academiccv}!.
+% All packages are automatically loaded when the class is used.
+% It is thus sufficient to write \verb!\documentclass{academiccv}! to have access
+% to all commands.
 % While the class itself does not define any new option, it inherits from
 % the article class (and, thus, accepts all of the options of article).
 % In particular, \verb!a4paper! and the like can be useful.
+% In order to distinguish between the packages defined by this project and the
+% other packages, we call our packages \emph{modules}.
 %
 % Before delving into each module, we highlight the fact that this class, its
-% packages and its documentation are written using the \verb!expl3! package.
+% modules and its documentation are written using the \verb!expl3! module.
 % In particular, we define variables whose names are not valid in \LaTeX{}2e.
-% Moreover, the description gives the variable type using Expl3 names.
+% Moreover, the documentation gives the variable types using Expl3 names.
 % While we refer the reader to the documentation of Expl3 for all details,
 % we give here some useful information to be able to read the rest of this document.
 %
-% The used variable types are \enquote{boolean} (in the usual meaning),
-% \enquote{token list}, and \enquote{skip}.
-% A token list can be any sequence of characters and \LaTeX commands.
-% For instance, \verb!{Gaëtan Staquet}! and \verb!{Gaëtan \and Staquet}! are both
-% valid token lists.
-% Likewise, \verb!{\bfseries\color{blue}\scshape}! is also a valid token list.
-% A skip is simply a length, e.g., \verb!10pt!, \verb!3em!, \verb!.7\linewidth!,
-% and so on.
-% Each module defines its own set of variables.
-% Each variable holding data is accompagnied by a variable holding the style
-% to apply when typesetting.
+% The used variable types are \enquote{boolean}, \enquote{token list}, and \enquote{skip}:
+% \begin{itemize}
+%   \item
+%   A boolean is either true or false,
+%   \item
+%   A token list can be any sequence of characters and \LaTeX commands.
+%   For instance, \verb!{Gaëtan Staquet}! and \verb!{Gaëtan \and Staquet}! are both
+%   valid token lists.
+%   Likewise, \verb!{\bfseries\color{blue}\scshape}! is a valid token list.
+%   \item
+%   A skip is simply a length, e.g., \verb!10pt!, \verb!3em!, \verb!.7\linewidth!,
+%   and so on.
+% \end{itemize}
+% Each module defines its own set of variables, which can be split into two groups:
+% \begin{itemize}
+%   \item
+%   Some variables hold the data that has to be typesetted (for instance,
+% the title of a publication, its year, and so on).
+%   \item
+%   Some variables are used to control how these data are typesetted (for instance,
+% the title of a publication is written in bold and underlined, and so on).
+% \end{itemize}
 % Most of the modules provide a command to add a particular entry (including
 % the style to apply to that particular entry), and a
 % command to define the style globally (for all entries that follow).
@@ -129,24 +142,56 @@
 % For instance, the command \cs{printPublication} command can be overriden
 % by calling \verb!\RenewDocumentCommand{\printPublication}{}{ ... }!.
 % To ease the use of the variables and their corresponding styles, we define a few 
-% commands.
-% 
-% \section{Typesetting tools}
+% common commands in \Cref{sec:typesetting}.
+% Then, each module is described one by one.
+% Before that, we give a minimal example.
 %
-% We start with functions that can be used to easily typeset fields of a given
-% type defined by the modules, while automatically using the appropriate styles.
-% They are heavily used in the commands and environments of the following sections.
+% \section{Minimal example}
+%
+% The following document shows a minimal example, loading the \texttt{academiccv}
+% class, displays the title for a person named \enquote{Your Name}, and one
+% publication.
+%
+% \begin{verbatim}
+%   \documentclass{academiccv}
+% 
+%   \thispagestyle{empty}
+% 
+%   \begin{document}
+%     \makecvtitle{
+%       author = Your Name,
+%     }
+%
+%     \section{Publications}
+%
+%     \publication{
+%       title = Publication number 1,
+%       authors = Names of the author,
+%       year = Publication year,
+%     }
+%  \end{document}
+%\end{verbatim}
+%
+% A longer example, showcasing each module and how to configure the typesetting,
+% can be found on the project's repository.\footnote{\url{https://github.com/DocSkellington/academic-cv}}
+% 
+% \section{Typesetting tools}\label{sec:typesetting}
+%
+% We start with functions that ease the typesetting of a variable of a given
+% type, while automatically using the appropriate style.
+% They are heavily used in the commands and environments of the modules, described
+% in the next sections.
 % We highly recommend relying on these functions when redefining these commands
 % and environments, or even defining yours.
-% By default, the field types in the functions are \verb!tl! (token lists).
+% By default, the variable types in the functions are \verb!tl! (token lists).
 % The exact names and types of the available variables are described in the
 % documentation of each module.
 %
 % \begin{function}{\useVSpace}
 %   \begin{syntax}
-%     \cs{useVSpace} \marg{module} \marg{field} \oarg{add}
+%     \cs{useVSpace} \marg{module} \marg{variable} \oarg{add}
 %   \end{syntax}
-% Retrieves the variable \meta{field} from \meta{module} holding a \enquote{skip}
+% Retrieves the variable \meta{variable} from \meta{module} holding a \enquote{skip}
 % value.
 % It then adds \meta{add}, and creates a vertical space of the resulting size.
 %
@@ -158,35 +203,41 @@
 %     \cs{formatURL} \marg{prefix} \marg{suffix}
 %   \end{syntax}
 % Creates a link by concatenating \meta{prefix} and the contents of the variable
-% named \meta{suffix} while outputting only the contents of \meta{suffix}.
+% named \meta{suffix} while displaying only the contents of \meta{suffix}.
+% That is, it creates a hyperlink to \meta{prefix}\meta{suffix} but only shows
+% \meta{suffix} in the text.
 % \end{function}
 %
 % \begin{function}{\ifemptyTF, \iftrueTF}
 %   \begin{syntax}
-%     \cs{ifemptyTF} \marg{module} \marg{field} \oarg{field type} \marg{true} \marg{false}
-%     \cs{iftrueTF} \marg{module} \marg{field} \marg{true} \marg{false}
+%     \cs{ifemptyTF} \marg{module} \marg{variable} \oarg{variable type} \marg{true} \marg{false}
+%     \cs{iftrueTF} \marg{module} \marg{variable} \marg{true} \marg{false}
 %   \end{syntax}
-% \cs{ifemptyTF} tests if the variable \meta{field} of \meta{module} of
-% type \meta{field type} is empty.
+% \cs{ifemptyTF} tests if the variable \meta{variable} of \meta{module} of
+% type \meta{variable type} is empty.
 % If it is empty, it executes \meta{true}, otherwise, \meta{false}.
 %
-% \cs{iftrueTF} tests if the \emph{boolean} variable \meta{field} of \meta{module}
-% if true.
+% \cs{iftrueTF} tests if the \emph{boolean} variable \meta{variable} of \meta{module}
+% is true.
+% It it is the case, \meta{true} is executed, otherwise, \meta{false} is.
 % \end{function}
 %
 % \begin{function}{\print}
 %   \begin{syntax}
-%     \cs{print} \oarg{prefix} \marg{module} \marg{field} \oarg{suffix} \oarg{field type}
+%     \cs{print} \oarg{prefix} \marg{module} \marg{variable} \oarg{suffix} \oarg{variable type}
 %   \end{syntax}
-%   Prints the value stored in the variable for \meta{field} of \meta{module}
-%   and of type \meta{field type}, using the appropriate formatting style.
-%   
+%   Prints the value stored in the variable for \meta{variable} of \meta{module}
+%   and of type \meta{variable type}, using the appropriate formatting style.
+%   If it is not empty, \meta{prefix} is displayed before the value of \meta{variable}.
+%   Likewise, \meta{suffix} is added after the value of \meta{variable}, if it
+%   is not empty.
+%
 %   If the variable is empty, prints nothing.
 % \end{function}
 %
 % \begin{function}{\printURL}
 %   \begin{syntax}
-%     \cs{printURL} \oarg{prefix} \marg{module} \marg{field} \marg{URL prefix} \oarg{suffix} \oarg{field type}
+%     \cs{printURL} \oarg{prefix} \marg{module} \marg{variable} \marg{URL prefix} \oarg{suffix} \oarg{variable type}
 %   \end{syntax}
 %   Similar to \cs{print} but calls \cs{formatURL} with \meta{URL prefix} and
 % the contents of the variable.
@@ -194,10 +245,10 @@
 %
 % \section{The \enquote{title} module}
 %
-% The title produced by the \verb!academiccv! class contains multiple fields,
+% The title produced by the \verb!academiccv! class contains multiple variables,
 % such as the name, current organization(s) and position, email address(es),
 % links to a personnal website, etc.
-% To configure the values that must appear and typeset the title, simply use
+% To configure the variables and typeset the title, simply use
 % the following command.
 %
 % \begin{function}{\makecvtitle}
@@ -215,10 +266,10 @@
 % modify this, call \cs{hypersetup} of package \verb!hyperref! after \cs{makecvtitle}.
 %
 % Finally, the function defines the value of the globally accessible variable
-% \cs{l_author_tl} as the value of the author field.
-% \end{function}
+% \cs{l_author_tl} as the value of the author variable.
 %
 % We do not forbid using multiple times \cs{makecvtitle} in a single document.
+% \end{function}
 %
 % \begin{table}
 % \centering
@@ -239,7 +290,7 @@
 % \verb!zipcode! & Token list & Office's zipcode & No\\
 % \verb!city! & Token list & Office's city & No\\
 % \verb!country! & Token list & Office's country & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:titleSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{makecvtitle}.}%
@@ -282,13 +333,15 @@
 % \verb!date! & Token list & Style to print the date of the last update & \verb!{\footnotesize}!\\
 % \verb!vertical-space! & Skip & Size of the vertical space between the author and the position & \verb!1em!\\
 % \verb!portion-photo! & Floating-point number & Portion of the line width to reserve for the portrait picture & \verb!.25!\\
+% \verb!margin-photo! & Skip & Size of the \enquote{gap} between the title text
+% and the photo & \verb!15pt!\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{titleSetup}.}%
 % \label{tab:titleSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_title_author_tl,
@@ -305,58 +358,58 @@
 %   \l_title_city_tl,
 %   \l_title_country_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:makecvtitle}.
+% Each variable corresponds to a key of \Cref{tab:makecvtitle}.
 % Observe that emails are stored within a \verb!clist! (comma separated list).
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_title_authorStyle_tl}
-% The style for the \verb!author! field.
+% The style for the \verb!author! variable.
 % Initially equals to \verb!{\Huge\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_title_positionStyle_tl}
-% The style for the \verb!position! field.
+% The style for the \verb!position! variable.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
 % \begin{variable}{\l_title_organizationStyle_tl}
-% The style for the \verb!organization! field.
+% The style for the \verb!organization! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_streetStyle_tl}
-% The style for the \verb!street! field.
+% The style for the \verb!street! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_zipcodeStyle_tl}
-% The style for the \verb!zipcode! field.
+% The style for the \verb!zipcode! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_cityStyle_tl}
-% The style for the \verb!city! field.
+% The style for the \verb!city! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_countryStyle_tl}
-% The style for the \verb!country! field.
+% The style for the \verb!country! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_emailStyle_tl}
-% The style for the \verb!email! field.
+% The style for the \verb!email! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_websiteStyle_tl}
-% The style for the \verb!website! field.
+% The style for the \verb!website! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_githubStyle_tl}
-% The style for the \verb!github! field.
+% The style for the \verb!github! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_orcidStyle_tl}
-% The style for the \verb!orcid! field.
+% The style for the \verb!orcid! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_title_linkedInStyle_tl}
-% The style for the \verb!linkedIn! field.
+% The style for the \verb!linkedIn! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 %
@@ -384,6 +437,11 @@
 % Initially equals to \verb!.25! (i.e., a quarter of the line width).
 % \end{variable}
 %
+% \begin{variable}{\l_title_spaceTitlePhoto_skip}
+% Governs the horizontal space between the title text and the photo.
+% Initially equals to \verb!15pt!.
+% \end{variable}
+%
 % \subsection{Typesetting Commands}
 %
 % \begin{function}{\formatAddress}
@@ -408,7 +466,7 @@
 %   \begin{syntax}
 %     \cs{formatEmails}
 %   \end{syntax}
-% For every email address stored in the field \verb!email!, calls
+% For every email address stored in the variable \verb!email!, calls
 % \cs{formatEmail} on that address.
 % Only redefine this if you know how to use comma separated list.
 % \end{function}
@@ -419,7 +477,7 @@
 %   \end{syntax}
 % Typesets the links.
 % By default, it prints the email addresses, the website URL preceded by \faHome{} 
-% (\verb!\faHome! from package \verb!{fontawesome5}!),
+% (\verb!\faHome! from package \verb!fontawesome5!),
 % the GitHub link preceded by \faGithub{} (\verb!\faGithub!),
 % the ORCID link preceded by \faOrcid{} (\verb!\faOrcid!),
 % and the LinkedIn link preceded by \faLinkedin{} (\verb!\faLinkedin!),
@@ -430,8 +488,7 @@
 %   \begin{syntax}
 %     \cs{updatedMessage}
 %   \end{syntax}
-% By default, typesets the sentence \enquote{Last updated on \cs{today}}, such that
-% \cs{today} is expanded.
+% By default, typesets the sentence \enquote{Last updated on \cs{today}} (\cs{today} is expanded).
 % \end{function}
 %
 % \begin{function}{\showUpdated}
@@ -457,7 +514,7 @@
 %
 % The \verb!academiccv! class relies on the \verb!titlesec! package to change how
 % section headings are typesetted.
-% That is, it allows to draw rules above and below the headings, and to toggle
+% It allows to draw rules above and below the headings, and to toggle
 % whether the numbering is shown.
 % Moreover, it is possible to draw a rectangle between the numbering (or the left
 % margin) and the section's name, except for subsubsections.
@@ -475,7 +532,15 @@
 % where \meta{key-value pairs} are pairs \verb!key = value!, separated by a comma,
 % coming from \Cref{tab:sectionSetup}.
 % The three commands expect the same key-value pairs, and their default values
-% are the same.
+% are the same, except for \verb!style!:
+% \begin{itemize}
+%   \item
+%   For sections, \verb!style! defaults to \verb!{\normalfont\Large\bfseries}!.
+%   \item
+%   For subsections, it defaults to \verb!{\normalfont\large\bfseries}!.
+%   \item
+%   For subsubsections, it defaults to \verb!{\normalfont\bfseries}!.
+% \end{itemize}
 % Note that the keys starting with \verb!rectangle/! are not defined for
 % subsubsections.
 %
@@ -485,12 +550,12 @@
 %
 % \begin{table}
 % \centering
-% \begin{tabular}{l p{45pt} p{95pt} r}
+% \begin{tabular}{l p{45pt} p{110pt} >{\raggedleft\arraybackslash}p{70pt}}
 % \toprule
 % Key & Value type & Details & Default value\\
 % \midrule
 % \verb!show-number! & Boolean & Whether to show the numbering & \verb!false!\\
-% \verb!style! & Token list & Headings style & \verb!{\Large\bfseries}!\\
+% \verb!style! & Token list & Headings style & See function documentation\\
 % \verb!hspace! & Skip & Horizontal space between the numbering and the title & \verb!2em!\\
 % \midrule
 % \verb!before/vspace-before! & Skip & Vertical space before the upper rule & \verb!3pt!\\
@@ -541,7 +606,7 @@
 % Key & Value type & Details & Required\\
 % \midrule
 % \verb!title! & Token list & The title of the publication & Yes\\
-% \verb!authors! & Token list & The authors & Yes\\
+% \verb!authors! & Token list & The author(s) & Yes\\
 % \verb!year! & Token list & The publication year & Yes\\
 % \verb!reference! & Token list & The bibliography reference & No\\
 % \verb!where! & Token list & The conference/journal & No\\
@@ -549,14 +614,12 @@
 % \verb!doi! & Token list & The DOI & No\\
 % \verb!arxiv! & Token list & The arXiv DOI & No\\
 % \verb!note! & Token list & A note/remark on the paper & No\\
-% \verb!style! & Key-value pairs & Overwrite style & No\\
+% \verb!style! & Key-value pairs & Overwrite style (see \Cref{tab:publicationSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{publication}.}%
 % \label{tab:publication}
 % \end{table}
-%
-% Styles can be changed globally with the following command.
 %
 % \begin{function}{\publicationSetup}
 %   \begin{syntax}
@@ -568,7 +631,7 @@
 %
 % \begin{table}
 % \centering
-% \begin{tabular}{l l p{140pt} r}
+% \begin{tabular}{l l p{130pt} r}
 % \toprule
 % Key & Value type & Details & Default value\\
 % \midrule
@@ -589,7 +652,7 @@
 % \label{tab:publicationSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_publication_title_tl,
@@ -602,37 +665,37 @@
 %   \l_publication_arxiv_tl,
 %   \l_publication_note_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:publication}.
+% Each variable corresponds to a key of \Cref{tab:publication}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_publication_titleStyle_tl}
-% The style for the \verb!title! field.
+% The style for the \verb!title! variable.
 % Initially equals to \verb!{\large\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_publication_authorsStyle_tl}
-% The style for the \verb!authors! field.
+% The style for the \verb!authors! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_publication_yearStyle_tl}
-% The style for the \verb!year! field.
+% The style for the \verb!year! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_publication_refStyle_tl}
-% The style for the \verb!ref! field.
+% The style for the \verb!ref! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_publication_whereStyle_tl}
-% The style for the \verb!where! field.
+% The style for the \verb!where! variable.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
 % \begin{variable}{\l_publication_shortWhereStyle_tl}
-% The style for the \verb!shortWhere! field.
+% The style for the \verb!shortWhere! variable.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
 % \begin{variable}{\l_publication_doiStyle_tl}
-% The style for the \verb!doi! field.
+% The style for the \verb!doi! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_publication_doiPrefix_tl}
@@ -641,7 +704,7 @@
 % Initially equals to \verb!{DOI:\ }!.
 % \end{variable}
 % \begin{variable}{\l_publication_arxivStyle_tl}
-% The style for the \verb!arxiv! field.
+% The style for the \verb!arxiv! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_publication_arxivPrefix_tl}
@@ -650,7 +713,7 @@
 % Initially equals to \verb!{arXiv:\ }!.
 % \end{variable}
 % \begin{variable}{\l_publication_noteStyle_tl}
-% The style for the \verb!note! field.
+% The style for the \verb!note! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 %
@@ -660,13 +723,13 @@
 %   \begin{syntax}
 %     \cs{printPublication}
 %   \end{syntax}
-% Typesets a publication, using the fields and styles defined by \cs{publication}
+% Typesets a publication, using the variables and styles defined by \cs{publication}
 % and \cs{publicationSetup}.
 % By default, is prints the bibliography reference between square brackets,
 % the title,
 % the authors,
 % the conference/journal,
-% its acronym (in parenthesis if both the conference/journal and its acronym are given),
+% its acronym (between parentheses if both the conference/journal and its acronym are given),
 % the year,
 % the DOI link,
 % the arXiv DOI link,
@@ -683,8 +746,10 @@
 % By default, the margin is typesetted on the left and the main on the right
 % (while being horizontally aligned at the top).
 % It is possible to swap the order.
-% The following modules offer an easy-to-use interface for specific purposes.
-% 
+%
+% The remaining modules all rely on this module and offer specific variables and
+% styles to construct the document.
+%
 % \begin{function}{\cvitem}
 %   \begin{syntax}
 %     \cs{cvitem} \oarg{style} \marg{margin} \marg{main}
@@ -695,8 +760,6 @@
 % See \Cref{tab:itemSetup} for the accepted pairs, and \cs{itemSetup} for the
 % global command.
 % \end{function}
-%
-% Styles can be defined globally thanks to the following command.
 %
 % \begin{function}{\itemSetup}
 %   \begin{syntax}
@@ -728,13 +791,14 @@
 % \label{tab:itemSetup}
 % \end{table}
 %
-% Since this module does not provide any typesetting function, variables are not
-% described.
+% Since this module only defines generic functions, variables are not documented.
 %
 % \section{The \enquote{job} module}
 %
-% To typeset past and current jobs, one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{job} module allows to list the various jobs and positions occupied
+% by the author.
+% A job is described by its start and end dates, its title, the organization
+% in which the job took place, and a description.
 %
 % \begin{function}{\job}
 %   \begin{syntax}
@@ -759,15 +823,13 @@
 % \verb!title! & Token list & Job's title & No\\
 % \verb!organization! & Token list & Job's organization & No\\
 % \verb!description! & Token list & Job's description & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:jobSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{job}.}%
 % \label{tab:job}
 % \end{table}
 % 
-% Styles can be defined globally thanks to the following command.
-%
 % \begin{function}{\jobSetup}
 %   \begin{syntax}
 %     \cs{jobSetup} \marg{key-value pairs}
@@ -788,7 +850,7 @@
 % \verb!start! & Token list & Style for the job's starting date & \verb!{\bfseries}!\\
 % \verb!end! & Token list & Style for the job's ending date & \verb!{\bfseries}!\\
 % \verb!title! & Token list & Style for the job's title & \verb!{\bfseries}!\\
-% \verb!organization! & Token list & Style for the job's affilition & \verb!{\small}!\\
+% \verb!organization! & Token list & Style for the job's organization & \verb!{\small}!\\
 % \verb!description! & Token list & Style for the job's description & \verb!{\small}!\\
 % \midrule
 % \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
@@ -801,7 +863,7 @@
 % \label{tab:jobSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_job_start_tl,
@@ -810,32 +872,33 @@
 %   \l_job_organization_tl,
 %   \l_job_description_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:job}.
+% Each variable corresponds to a key of \Cref{tab:job}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_job_startStyle_tl}
-% The style for the \verb!start! field.
+% The style for the \verb!start! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_job_endStyle_tl}
-% The style for the \verb!end! field.
+% The style for the \verb!end! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_job_titleStyle_tl}
-% The style for the \verb!title! field.
+% The style for the \verb!title! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_job_organizationStyle_tl}
-% The style for the \verb!organization! field.
+% The style for the \verb!organization! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
 % \begin{variable}{\l_job_descriptionStyle_tl}
-% The style for the \verb!description! field.
+% The style for the \verb!description! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}
@@ -845,8 +908,8 @@
 %     \cs{marginForJob}
 %   \end{syntax}
 % Typesets the content of the margin part for a job.
-% By default, it displays the starting date followed by a -- and the ending date.
-% Then, on a new line, affilition is shown.
+% By default, it displays the starting and ending dates separated by a dash,
+% followed by the organization on a new line.
 % \end{function}
 %
 % \begin{function}{\mainForJob}
@@ -859,8 +922,9 @@
 %
 % \section{The \enquote{talk} module}
 %
-% To typeset given talks, one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{talks} module allows to list the talks performed by the author.
+% A talk is described by its title, date, and where it took place
+% (both geographically and in which context).
 %
 % \begin{function}{\talk}
 %   \begin{syntax}
@@ -884,15 +948,13 @@
 % \verb!title! & Token list & Talk's title & No\\
 % \verb!conference! & Token list & Talk's conference & No\\
 % \verb!where! & Token list & Talk's location & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:talkSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{talk}.}%
 % \label{tab:talk}
 % \end{table}
 % 
-% Styles can be defined globally thanks to the following command.
-%
 % \begin{function}{\talkSetup}
 %   \begin{syntax}
 %     \cs{talkSetup} \marg{key-value pairs}
@@ -910,10 +972,10 @@
 % \toprule
 % Key & Value type & Details & Default value\\
 % \midrule
-% \verb!date! & Token list & Style for the talk's date & \verb!{\bfseries}!\\
+% \verb!date! & Token list & Style for the talk's date & \verb!{\normalfont}!\\
 % \verb!title! & Token list & Style for the talk's title & \verb!{\bfseries}!\\
-% \verb!conference! & Token list & Style for the talk's conference & \verb!{\small}!\\
-% \verb!where! & Token list & Style for the talk's location & \verb!{\small}!\\
+% \verb!conference! & Token list & Style for the talk's conference & \verb!{\normalfont}!\\
+% \verb!where! & Token list & Style for the talk's location & \verb!{\footnotesize}!\\
 % \midrule
 % \verb!swap! & Boolean & Whether to swap the margin and main positions & \verb!false!\\
 % \verb!margin-size! & Skip & Size for the margin & \verb!{80pt}!\\
@@ -925,7 +987,7 @@
 % \label{tab:talkSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_talk_date_tl,
@@ -933,28 +995,29 @@
 %   \l_talk_conference_tl,
 %   \l_talk_where_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:talk}.
+% Each variable corresponds to a key of \Cref{tab:talk}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_talk_dateStyle_tl}
-% The style for the \verb!date! field.
+% The style for the \verb!date! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_talk_titleStyle_tl}
-% The style for the \verb!title! field.
+% The style for the \verb!title! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_talk_conferenceStyle_tl}
-% The style for the \verb!conference! field.
+% The style for the \verb!conference! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_talk_whereStyle_tl}
-% The style for the \verb!where! field.
+% The style for the \verb!where! variable.
 % Initially equals to \verb!{\footnotesize}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}
@@ -978,8 +1041,11 @@
 %
 % \section{The \enquote{teach} module}
 %
-% To typeset teaching activites, one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{teach} module allows to list the courses and exercices sessions
+% performed by the author.
+% A course is described by its name, year(s), the role played within it
+% (teaching assistant, professor, and so on), to whom it is given, the organization
+% in which it took place, and a description.
 %
 % \begin{function}{\teach}
 %   \begin{syntax}
@@ -1005,14 +1071,12 @@
 % \verb!level! & Token list & Course's level (to who it is teached) & No\\
 % \verb!organization! & Token list & In which school & No\\
 % \verb!description! & Token list & Course's description & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:teachSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{teach}.}%
 % \label{tab:teach}
 % \end{table}
-% 
-% Styles can be defined globally thanks to the following command.
 %
 % \begin{function}{\teachSetup}
 %   \begin{syntax}
@@ -1048,7 +1112,7 @@
 % \label{tab:teachSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_teach_year_tl,
@@ -1058,36 +1122,37 @@
 %   \l_teach_organization_tl,
 %   \l_teach_description_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:teach}.
+% Each variable corresponds to a key of \Cref{tab:teach}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_teach_yearStyle_tl}
-% The style for the \verb!year! field.
+% The style for the \verb!year! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_teach_courseStyle_tl}
-% The style for the \verb!course! field.
+% The style for the \verb!course! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_teach_roleStyle_tl}
-% The style for the \verb!role! field.
+% The style for the \verb!role! variable.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
 % \begin{variable}{\l_teach_levelStyle_tl}
-% The style for the \verb!level! field.
+% The style for the \verb!level! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_teach_organizationStyle_tl}
-% The style for the \verb!organization! field.
+% The style for the \verb!organization! variable.
 % Initially equals to \verb!{\footnotesize}!.
 % \end{variable}
 % \begin{variable}{\l_teach_descriptionStyle_tl}
-% The style for the \verb!description! field.
+% The style for the \verb!description! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}
@@ -1106,14 +1171,17 @@
 %   \end{syntax}
 % Typesets the content of the main part for a course.
 % By default, it displays the course's name, level, and the role on the same line,
-% followed by the description, and the affilition,
+% followed by the description, and the organization,
 % each on their own line.
 % \end{function}
 %
 % \section{The \enquote{supervision} module}
 %
-% To typeset supervision activites, one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{supervision} module allows to list the students' projects
+% supervised by the author.
+% A supervision is described by the name (of the student or the project),
+% the year, the role within the supervision,
+% the organization in which it took place, and a description.
 %
 % \begin{function}{\supervision}
 %   \begin{syntax}
@@ -1138,14 +1206,12 @@
 % \verb!role! & Token list & Role played in the supervision & No\\
 % \verb!organization! & Token list & In which school & No\\
 % \verb!description! & Token list & Description & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:supervisionSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{supervision}.}%
 % \label{tab:supervision}
 % \end{table}
-% 
-% Styles can be defined globally thanks to the following command.
 %
 % \begin{function}{\supervisionSetup}
 %   \begin{syntax}
@@ -1180,7 +1246,7 @@
 % \label{tab:supervisionSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_supervision_year_tl,
@@ -1189,32 +1255,33 @@
 %   \l_supervision_organization_tl,
 %   \l_supervision_description_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:supervision}.
+% Each variable corresponds to a key of \Cref{tab:supervision}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_supervision_yearStyle_tl}
-% The style for the \verb!year! field.
+% The style for the \verb!year! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_supervision_nameStyle_tl}
-% The style for the \verb!name! field.
+% The style for the \verb!name! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_supervision_roleStyle_tl}
-% The style for the \verb!role! field.
+% The style for the \verb!role! variable.
 % Initially equals to \verb!{\itshape}!.
 % \end{variable}
 % \begin{variable}{\l_supervision_organizationStyle_tl}
-% The style for the \verb!organization! field.
+% The style for the \verb!organization! variable.
 % Initially equals to \verb!{\footnotesize}!.
 % \end{variable}
 % \begin{variable}{\l_supervision_descriptionStyle_tl}
-% The style for the \verb!description! field.
+% The style for the \verb!description! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}
@@ -1234,14 +1301,16 @@
 % Typesets the content of the main part for a supervised project.
 % By default, it displays the name (of the projet or the student(s)) and the
 % role on the same line,
-% followed by the description, and the affilition,
+% followed by the description, and the organization,
 % each on their own line.
 % \end{function}
 %
 % \section{The \enquote{project} module}
 %
-% To typeset important projects, one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{project} module allows to list the projects in which the author
+% played a role.
+% A project is described by its name (and abbreviation, if one exists),
+% the role within the project, its homepage, its artifact, and a description.
 %
 % \begin{function}{\project}
 %   \begin{syntax}
@@ -1267,15 +1336,13 @@
 % \verb!description! & Token list & Description & No\\
 % \verb!homepage! & Token list & Project's repository or homepage & No\\
 % \verb!artifact! & Token list & Project's artifact & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:projectSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{project}.}%
 % \label{tab:project}
 % \end{table}
 % 
-% Styles can be defined globally thanks to the following command.
-%
 % \begin{function}{\projectSetup}
 %   \begin{syntax}
 %     \cs{projectSetup} \marg{key-value pairs}
@@ -1310,36 +1377,47 @@
 % \label{tab:projectSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_project_shortName_tl,
 %   \l_project_name_tl,
 %   \l_project_role_tl,
+%   \l_project_homepage_tl,
+%   \l_project_artifact_tl,
 %   \l_project_description_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:project}.
+% Each variable corresponds to a key of \Cref{tab:project}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_project_shortNameStyle_tl}
-% The style for the \verb!shortName! field.
+% The style for the \verb!shortName! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_project_nameStyle_tl}
-% The style for the \verb!name! field.
+% The style for the \verb!name! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_project_roleStyle_tl}
-% The style for the \verb!role! field.
+% The style for the \verb!role! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
 % \begin{variable}{\l_project_descriptionStyle_tl}
-% The style for the \verb!description! field.
+% The style for the \verb!description! variable.
 % Initially equals to \verb!{\small}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+% \begin{variable}{\l_project_homepageStyle_tl}
+% The style for the \verb!homepage! variable.
+% Initially equals to \verb!{\footnotesize}!.
+% \end{variable}
+% \begin{variable}{\l_project_artifactStyle_tl}
+% The style for the \verb!artifact! variable.
+% Initially equals to \verb!{\footnotesize}!.
+% \end{variable}
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}
@@ -1358,13 +1436,15 @@
 %   \end{syntax}
 % Typesets the content of the main part for a project.
 % By default, it displays the name and the role on the same line,
-% followed by the description, on its own line.
+% followed by the description, the homepage, and the artifact, each on its own
+% line.
 % \end{function}
 %
 % \section{The \enquote{award} module}
 %
-% To typeset received awards, one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{award} module allows to list the awards and distinctions received
+% by the author.
+% An award is described by its year and description.
 %
 % \begin{function}{\award}
 %   \begin{syntax}
@@ -1386,15 +1466,13 @@
 % \midrule
 % \verb!year! & Token list & Award's year & No\\
 % \verb!description! & Token list & Award's description & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:awardSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{award}.}%
 % \label{tab:award}
 % \end{table}
 % 
-% Styles can be defined globally thanks to the following command.
-%
 % \begin{function}{\awardSetup}
 %   \begin{syntax}
 %     \cs{awardSetup} \marg{key-value pairs}
@@ -1425,26 +1503,27 @@
 % \label{tab:awardSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_award_year_tl,
 %   \l_award_description_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:award}.
+% Each variable corresponds to a key of \Cref{tab:award}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_award_yearStyle_tl}
-% The style for the \verb!year! field.
+% The style for the \verb!year! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_award_descriptionStyle_tl}
-% The style for the \verb!description! field.
+% The style for the \verb!description! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}
@@ -1467,9 +1546,10 @@
 %
 % \section{The \enquote{service} module}
 %
-% To typeset received collective and administrative responsibilities (or services
-% to the community), one can use generic CV items.
-% This module provides a nice interface to simplify typesetting.
+% The \enquote{service} module allows to list the collective and administrative
+% responsibilities (or services to the community) done by the author.
+% by the author.
+% A service is described by its year and description.
 %
 % \begin{function}{\service}
 %   \begin{syntax}
@@ -1491,15 +1571,13 @@
 % \midrule
 % \verb!year! & Token list & Service's year & No\\
 % \verb!description! & Token list & Service's description & No\\
-% \verb!style! & Key-value pairs & Overwrites style & No\\
+% \verb!style! & Key-value pairs & Overwrites style (see \Cref{tab:serviceSetup}) & No\\
 % \bottomrule
 % \end{tabular}
 % \caption{Keys and expected type for \cs{service}.}%
 % \label{tab:service}
 % \end{table}
 % 
-% Styles can be defined globally thanks to the following command.
-%
 % \begin{function}{\serviceSetup}
 %   \begin{syntax}
 %     \cs{serviceSetup} \marg{key-value pairs}
@@ -1530,26 +1608,27 @@
 % \label{tab:serviceSetup}
 % \end{table}
 %
-% \subsection{Fields and Styles}
+% \subsection{Variables and Styles}
 %
 % \begin{variable}{
 %   \l_service_year_tl,
 %   \l_service_description_tl,
 % }
-% Each field variable corresponds to a key of \Cref{tab:service}.
+% Each variable corresponds to a key of \Cref{tab:service}.
 % See \cs{print} or \cs{printURL} for an easy way of typesetting the values stored
-% in the fields.
+% in the variables.
 % \end{variable}
 %
 % \begin{variable}{\l_service_yearStyle_tl}
-% The style for the \verb!year! field.
+% The style for the \verb!year! variable.
 % Initially equals to \verb!{\bfseries}!.
 % \end{variable}
 % \begin{variable}{\l_service_descriptionStyle_tl}
-% The style for the \verb!description! field.
+% The style for the \verb!description! variable.
 % Initially equals to \verb!{\normalfont}!.
 % \end{variable}
-% Variables tied to the \enquote{item} module are not displayed here, as they are
+%
+% Variables used by the \enquote{item} module are not documented here, as they are
 % not meant to be accessed.
 %
 % \subsection{Typesetting Commands}

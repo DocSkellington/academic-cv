@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-publication}{2023/10/22}{v1.1}{Academic curriculum vitae: publications}
+%<package>\ProvidesExplPackage{academiccv-publication}{2024/05/15}{v1.1}{Academic curriculum vitae: publications}
 
 \ExplSyntaxOn
 
@@ -40,7 +40,7 @@
 
 \keys_define:nn {publicationStyle} {
   title         .tl_set:N = \l_publication_titleStyle_tl,
-  title         .initial:n = {\bfseries\large},
+  title         .initial:n = {\normalfont\bfseries\large},
   authors       .tl_set:N = \l_publication_authorsStyle_tl,
   authors       .initial:n = {\normalfont},
   year          .tl_set:N = \l_publication_yearStyle_tl,
