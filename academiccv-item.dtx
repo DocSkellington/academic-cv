@@ -96,11 +96,11 @@
 
 % \begin{macro}{newBox}
 %    \begin{macrocode}
-\NewDocumentCommand{\newBox}{ m +m O{title_tl} }{
-  \NewTColorBox{l__#1_env}{ m m }{
-    #1 = {##2},
-    ##1,
+\NewDocumentCommand{\l__declareCommand} {m +m m } {
+  \exp_args:Nc \ProvideDocumentCommand {#1TitleColor} { m } {
+    \colorlet{#1title}{basic!30!##1}
   }
+
   \exp_args:Nc \DeclareDocumentCommand {#1}
   { O{} m } {
     \group_begin:
@@ -110,6 +110,13 @@
       \end{l__#1_env}
     \group_end:
   }
+}
+\NewDocumentCommand{\newBox}{ m +m O{title_tl} }{
+  \NewTColorBox{l__#1_env}{ m m }{
+    #1 = {##2},
+    ##1,
+  }
+  \l__declareCommand {#1} {#2} {#3}
 }
 \NewDocumentCommand{\newBoxWithCounter}{ m +m O{title_tl} m }{
   \provideCounter{#1}
@@ -125,15 +132,7 @@
     title = {\thetcbcounter{}:~##2},
     ##1,
   }
-  \exp_args:Nc \DeclareDocumentCommand {#1}
-  { O{} m } {
-    \group_begin:
-      \keys_set:nn { #1 } { ##2 }
-      \begin{l__#1_env} {##1} {\use:c {l__#1_#3}}
-        #2
-      \end{l__#1_env}
-    \group_end:
-  }
+  \l__declareCommand {#1} {#2} {#3}
 }
 %    \end{macrocode}
 % \end{macro}

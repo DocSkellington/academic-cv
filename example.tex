@@ -86,8 +86,45 @@
   }
 
   \section{Work experience}
-  Please fill me!
 
+  \job{
+    title = The granddad,
+    start = 1963,
+    end = 1966,
+    institute = First body,
+    where = Somewhere,
+  }
+  % Changing the color of the frame also changes the color of the title
+  \colorlet{jobframe}{BrickRed}
+  % You can also change the letter appearing before the number of the box
+  \RenewDocumentCommand{\jobCounterTitle} {} {Work~}
+  \job{
+    title = The clown,
+    start = 1966,
+    end = 1969,
+    institute = Second body,
+    where = Somewhere,
+    description = {
+      {Stop, you're making me giddy!},
+    },
+  }
+  % You can change how the title color is computed from the color frame
+  % This change is not automatically reverted
+  \RenewDocumentCommand{\jobTitleColor}{m}{\colorlet{jobtitle}{Blue!60!#1}}
+  % The format used to number a box can be completely modified
+  \RenewDocumentCommand{\jobCounterFormat}{}{\jobCounterTitle\Roman{\tcbcounter}}
+  \job{
+    title = The exiled,
+    start = 1970,
+    end = 1974,
+    institute = Third body,
+    where = Somewhere,
+    description = {
+      {Ungh\dots Shoes, must find my shoes.},
+    },
+  }
+
+  \iffalse
   \section{Publications}
 
   \subsection{Published}
@@ -142,45 +179,6 @@
   }
 
   \subsubsection{Subsubsection}
-
-  \section{Work Experience}
-
-  \job{
-    start = 1963,
-    end = 1966,
-    title = The granddad,
-  }
-  \job{
-    start = 1966,
-    end = 1969,
-    title = The clown,
-    description = {Stop, you're making me giddy!},
-    organization = Second body,
-  }
-  \job{
-    start = 1970,
-    end = 1974,
-    title = The exiled,
-    description = {Ungh\dots Shoes, must find my shoes.},
-    organization = Third body,
-    style = { % use \jobSetup to setup style globally
-      start = {\itshape},
-      end = {\itshape},
-      title = {\scshape},
-      description = {\bfseries},
-      organization = {\Large},
-    },
-  }
-  \job {
-    start = 1974,
-    end = 1981,
-    title = The scarf,
-    description = Would you like a jelly baby?,
-    organization = Fourth body,
-    style = {
-      swap,
-    },
-  }
 
   \section{Talks}
 
@@ -344,4 +342,5 @@
     Content\\
     {\small Some smaller text}
   }
+  \fi
 \end{document}

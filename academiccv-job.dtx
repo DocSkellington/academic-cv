@@ -20,106 +20,49 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-job}{2024/15/15}{v1.1}{Academic curriculum vitae: jobs}
+%<package>\ProvidesExplPackage{academiccv-job}{2024/12/15}{v2.0}{Academic curriculum vitae: jobs}
 
 \ExplSyntaxOn
 
-% \begin{macro}{jobSetup}
-%    \begin{macrocode}
-\bool_new:N \l_job_swap_bool
-\skip_new:N \l_job_margin_skip
-\skip_new:N \l_job_space_skip
-\skip_new:N \l_job_vspaceAfter_skip
-\tl_new:N \l_job_startStyle_tl
-\tl_new:N \l_job_endStyle_tl
-\tl_new:N \l_job_titleStyle_tl
-\tl_new:N \l_job_organizationStyle_tl
-\tl_new:N \l_job_descriptionStyle_tl
+\colorlet{jobframe}{black}
 
-\keys_define:nn {jobStyle} {
-  swap          .bool_set:N = \l_job_swap_bool,
-  swap          .initial:n = {false},
-  swap          .default:n = {true},
-  margin-size   .skip_set:N = \l_job_margin_skip,
-  margin-size   .initial:n = {80pt},
-  space         .skip_set:N = \l_job_space_skip,
-  space         .initial:n = {5pt},
-  vspace-after  .skip_set:N = \l_job_vspaceAfter_skip,
-  vspace-after  .initial:n = {6pt},
-  start         .tl_set:N = \l_job_startStyle_tl,
-  start         .initial:n = {\bfseries},
-  end           .tl_set:N = \l_job_endStyle_tl,
-  end           .initial:n = {\bfseries},
-  title         .tl_set:N = \l_job_titleStyle_tl,
-  title         .initial:n = {\bfseries},
-  organization  .tl_set:N = \l_job_organizationStyle_tl,
-  organization  .initial:n = {\small},
-  description   .tl_set:N = \l_job_descriptionStyle_tl,
-  description   .initial:n = {\small},
-}
-\NewDocumentCommand{\jobSetup}{m}{\keys_set:nn {jobStyle} {#1}}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{marginForJob}
-%    \begin{macrocode}
-\NewDocumentCommand{\marginForJob}{}{
-  \print{job}{start}[~--~]
-  \print{job}{end}
-  \print[\\]{job}{organization}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\mainForJob}
-%    \begin{macrocode}
-\NewDocumentCommand{\mainForJob}{}{
-  \print{job}{title}
-  \print[\\]{job}{description}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\job}
-%    \begin{macrocode}
-\tl_new:N \l_job_start_tl
-\tl_new:N \l_job_end_tl
-\tl_new:N \l_job_title_tl
-\tl_new:N \l_job_organization_tl
-\tl_new:N \l_job_description_tl
-\keys_define:nn {job} {
-  start         .tl_set:N = \l_job_start_tl,
-  end           .tl_set:N = \l_job_end_tl,
-  title         .tl_set:N = \l_job_title_tl,
-  organization  .tl_set:N = \l_job_organization_tl,
-  description   .tl_set:N = \l_job_description_tl,
-  style         .code:n = {
-    \keys_set:nn {jobStyle} {#1}
+\tcbset{
+  job/.code = {
+    \jobTitleColor{jobframe}
+    \pgfkeysalso{basic = {jobframe}{jobtitle}{#1}}
   },
 }
-\NewDocumentCommand{\job}{ m }{
-  \group_begin:
-  \keys_set:nn {job} {#1}
-  
-  \iftrueTF{job}{swap}{
-    \cvitem[
-      swap = true,
-      margin-size = \l_job_margin_skip,
-      space = \l_job_space_skip,
-      vspace-after = \l_job_vspaceAfter_skip,
-    ]{\marginForJob}{\mainForJob}
-  }{
-    \cvitem[
-      swap = false,
-      margin-size = \l_job_margin_skip,
-      space = \l_job_space_skip,
-      vspace-after = \l_job_vspaceAfter_skip,
-    ]{\marginForJob}{\mainForJob}
-  }
-  \group_end:
+
+\tl_new:N \l__job_title_tl
+\tl_new:N \l__job_start_tl
+\tl_new:N \l__job_end_tl
+\tl_new:N \l__job_institute_tl
+\tl_new:N \l__job_where_tl
+\clist_new:N \l__job_description_clist
+\keys_define:nn { job } {
+  title.tl_set:N = \l__job_title_tl,
+  title.value_required:n = true,
+  start.tl_set:N = \l__job_start_tl,
+  start.value_required:n = true,
+  end.tl_set:N = \l__job_end_tl,
+  end.value_required:n = true,
+  institute.tl_set:N = \l__job_institute_tl,
+  institute.value_required:n = true,
+  where.tl_set:N = \l__job_where_tl,
+  where.value_required:n = true,
+  description.clist_set:N = \l__job_description_clist,
+  description.initial:V = \c_empty_clist,
 }
-%    \end{macrocode}
-% \end{macro}
+
+\newBoxWithCounter {job} {
+  \printDateRange {\l__job_start_tl} {\l__job_end_tl}
+  \par
+  \printPart{Institute}{\l__job_institute_tl,~\l__job_where_tl.}
+  \par
+  \clist_if_empty:NF {\l__job_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__job_description_clist} {\par}}
+  }
+} {WE} % Work Experience
 
 \ExplSyntaxOff
 
