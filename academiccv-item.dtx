@@ -20,71 +20,120 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-item}{2023/08/26}{v1.0}{Academic curriculum vitae: generic items}
+%<package>\ProvidesExplPackage{academiccv-item}{2024/12/15}{v2.0}{Academic curriculum vitae: generic items}
 
 \ExplSyntaxOn
 
-% \begin{macro}{itemSetup}
-%    \begin{macrocode}
-\bool_new:N \l_item_swap_bool
-\skip_new:N \l_item_margin_skip
-\skip_new:N \l_item_space_skip
-\skip_new:N \l_item_main_skip
-\tl_new:N \l_item_marginStyle_tl
-\tl_new:N \l_item_mainStyle_tl
+\colorlet{basic}{black}
 
-\keys_define:nn {itemStyle} {
-  swap          .bool_set:N = \l_item_swap_bool,
-  swap          .initial:n = {false},
-  swap          .default:n = {true},
-  margin-size   .skip_set:N = \l_item_margin_skip,
-  margin-size   .initial:n = {100pt},
-  space         .skip_set:N = \l_item_space_skip,
-  space         .initial:n = {5pt},
-  vspace-after  .skip_set:N = \l_item_vspaceAfter_skip,
-  vspace-after  .initial:n = {6pt},
-  margin        .tl_set:N = \l_item_marginStyle_tl,
-  margin        .initial:n = {\normalfont},
-  main          .tl_set:N = \l_item_mainStyle_tl,
-  main          .initial:n = {\normalfont},
+\tcbset {
+  basic/.style~n~args = {3}{
+    % TikZ
+    enhanced,
+    % Padding
+    left = 0pt,
+    right = 0pt,
+    top = 3pt,
+    bottom = 3pt,
+    % Space before and after
+    before~skip~balanced = 0.5\baselineskip plus 5pt,
+    after~skip~balanced = 0.5\baselineskip plus 5pt,
+    % Border
+    arc = 0pt,
+    boxrule = 0pt,
+    leftrule = 2pt,
+    rightrule = 0pt,
+    % Colors
+    colback = white,
+    % title,
+    title = {#3},
+    attach~title~to~upper = {\setlength{\parindent}{10pt}},
+    colframe = #1,
+    fonttitle = {\color{#2}\bfseries\large},
+    after~title = {\par},
+    %
+    breakable,
+  },
 }
-\NewDocumentCommand{\itemSetup}{m}{\keys_set:nn {itemStyle} {#1}}
+
+% \begin{macro}
+%    \begin{macrocode}
+\NewDocumentCommand{\provideCounter} { m } {
+  \ifcsname c@#1\endcsname
+    \expandafter{}
+  \else
+    \expandafter{\newcounter{#1}}
+  \fi
+}
+%    \end{macrocode}
+% \end{macro}
+
+% \begin{macro}{printPart,printDateRange}
+%    \begin{macrocode}
+\NewDocumentCommand{ \printPart }{ m +m }{
+  \noindent
+  \textbf{#1}:~#2
+}
+\NewDocumentCommand{ \printDateRange }{ m m }{
+  \noindent
+  #1 ~ \textendash{} ~ #2
+}
 %    \end{macrocode}
 % \end{macro}
 
 % \begin{macro}{cvitem}
 %    \begin{macrocode}
-\NewDocumentCommand{\cvitem}{ O{} m m }{
-  \group_begin:
-  \keys_set:nn {itemStyle} {#1}
-  \skip_set:Nn \l_item_main_skip
-    {\skip_eval:n {\linewidth - \l_item_margin_skip - \l_item_space_skip}}
+\NewDocumentCommand{\cvitem}{ O{basic} O{basic} m +m }{
+  \begin{tcolorbox}[
+    basic = {#1}{#2},
+    title = {#3}
+  ]
+    #4
+  \end{tcolorbox}
+}
+%    \end{macrocode}
+% \end{macro}
 
-  \iftrueTF{item}{swap}{
-    \noindent
-    \begin{minipage}[t]{\l_item_main_skip}
-      {\l_item_mainStyle_tl #3}
-    \end{minipage}
-    \hspace{\l_item_space_skip}
-    \begin{minipage}[t]{\l_item_margin_skip}
-      \begin{flushright}
-        {\l_item_marginStyle_tl #2}
-      \end{flushright}
-    \end{minipage}
-  }{
-    \noindent
-    \begin{minipage}[t]{\l_item_margin_skip}
-      \begin{flushleft}
-        {\l_item_marginStyle_tl #2}
-      \end{flushleft}
-    \end{minipage}
-    \hspace{\l_item_space_skip}
-    \begin{minipage}[t]{\l_item_main_skip}
-      {\l_item_mainStyle_tl #3}
-    \end{minipage}
+% \begin{macro}{newBox}
+%    \begin{macrocode}
+\NewDocumentCommand{\newBox}{ m +m O{title_tl} }{
+  \NewTColorBox{l__#1_env}{ m m }{
+    #1 = {##2},
+    ##1,
   }
-  \par\addvspace{\l_item_vspaceAfter_skip}
-  \group_end:
+  \exp_args:Nc \DeclareDocumentCommand {#1}
+  { O{} m } {
+    \group_begin:
+      \keys_set:nn { #1 } { ##2 }
+      \begin{l__#1_env} {##1} {\use:c {l__#1_#3}}
+        #2
+      \end{l__#1_env}
+    \group_end:
+  }
+}
+\NewDocumentCommand{\newBoxWithCounter}{ m +m O{title_tl} m }{
+  \provideCounter{#1}
+  \exp_args:Nc \DeclareDocumentCommand {#1CounterTitle} {} {#4}
+  \exp_args:Nc \DeclareDocumentCommand {#1CounterFormat} {} {
+    \use:c {#1CounterTitle} \arabic{\tcbcounter}
+  }
+  \DeclareTColorBox[
+    use~counter = #1,
+    number~freestyle = {\use:c {#1CounterFormat} }
+  ]{l__#1_env}{ m m }{
+    #1 = {##2},
+    title = {\thetcbcounter{}:~##2},
+    ##1,
+  }
+  \exp_args:Nc \DeclareDocumentCommand {#1}
+  { O{} m } {
+    \group_begin:
+      \keys_set:nn { #1 } { ##2 }
+      \begin{l__#1_env} {##1} {\use:c {l__#1_#3}}
+        #2
+      \end{l__#1_env}
+    \group_end:
+  }
 }
 %    \end{macrocode}
 % \end{macro}

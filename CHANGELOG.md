@@ -1,3 +1,11 @@
+# v2.0.0 (dev)
+
+Complete overhaul of the graphical style
+
+## Features
+
+- Using `tcolorbox` to define items
+
 # v1.1.0
 
 ## Features

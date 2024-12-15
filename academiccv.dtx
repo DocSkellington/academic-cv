@@ -20,9 +20,10 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<class>\NeedsTeXFormat{LaTeX2e}
-%<class>\ProvidesExplClass{academiccv}{2024/05/24}{v1.1}{Academic curriculum vitae document class}
+%<class>\ProvidesExplClass{academiccv}{2024/12/15}{v2.0}{Academic curriculum vitae document class}
 %
-%<class>\LoadClass{article}
+%<class>\LoadClass{scrartcl}
+%<class>\RequirePackage{expl3}
 %<class>\RequirePackage{etoolbox}
 %<class>\RequirePackage{xparse}
 %<class>\RequirePackage{xspace}
@@ -35,6 +36,11 @@
 %<class>\RequirePackage[includeheadfoot]{geometry}
 %<class>\RequirePackage{fancyhdr}
 %<class>\RequirePackage{lastpage}
+%<class>\RequirePackage{xurl}
+%<class>\RequirePackage{tikz}
+%<class>\RequirePackage{tcolorbox}
+%<class>\tcbuselibrary{skins, breakable}
+%<class>\RequirePackage{enumitem}
 %
 %<class>\RequirePackage{academiccv-section}
 %<class>\RequirePackage{academiccv-title}
@@ -1728,6 +1734,11 @@
 }
 %    \end{macrocode}
 % \end{macro}
+
+\setlist[itemize]{
+  label = \textbullet,
+  left = 1ex,
+}
 
 \tl_new:N \l_author_tl
 \fancypagestyle{plain}{
