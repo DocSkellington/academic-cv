@@ -1,0 +1,79 @@
+% \iffalse meta-comment
+%
+% Copyright (C) 2024 by Gaëtan Staquet
+% -----------------------------------
+%
+% This file may be distributed and/or modified under the
+% conditions of the LaTeX Project Public License, either version 1.3
+% of this license or (at your option) any later version.
+% The latest version of this license is in:
+%
+%    http://www.latex-project.org/lppl.txt
+%
+% and version 1.3 or later is part of all distributions of LaTeX
+% version 2005/12/01 or later.
+%
+% \fi
+%
+% \iffalse
+%<*driver>
+\ProvidesFile{\jobname.dtx}
+%</driver>
+%<package>\NeedsTeXFormat{LaTeX2e}
+%<package>\ProvidesExplPackage{academiccv-diploma}{2024/12/19}{v2.0}{Academic curriculum vitae: diplomas}
+
+\ExplSyntaxOn
+
+\colorlet{diplomaframe}{black}
+
+\tcbset{
+  diploma/.code = {
+    \diplomaTitleColor{diplomaframe}
+    \pgfkeysalso{basic = {diplomaframe}{diplomatitle}{#1}}
+  },
+}
+
+\tl_new:N \l__diploma_title_tl
+\tl_new:N \l__diploma_institute_tl
+\tl_new:N \l__diploma_where_tl
+\tl_new:N \l__diploma_date_tl
+\clist_new:N \l__diploma_description_clist
+\tl_new:N \l__diploma_honor_tl
+\tl_new:N \l__diploma_thesisTitle_tl
+\tl_new:N \l__diploma_thesisTitleFR_tl
+\keys_define:nn { diploma } {
+  title.tl_set:N = \l__diploma_title_tl,
+  title.value_required:n = true,
+  institute.tl_set:N = \l__diploma_institute_tl,
+  institute.value_required:n = true,
+  where.tl_set:N = \l__diploma_where_tl,
+  where.value_required:n = true,
+  date.tl_set:N = \l__diploma_date_tl,
+  date.value_required:n = true,
+  description.clist_set:N = \l__diploma_description_clist,
+  description.value_required:n = true,
+  honor.tl_set:N = \l__diploma_honor_tl,
+  honor.initial:V = \c_empty_tl,
+  thesis~title.tl_set:N = \l__diploma_thesisTitle_tl,
+  thesis~title.initial:V = \c_empty_tl,
+}
+
+\newBox {diploma} {
+  \printDate {\l__diploma_date_tl}
+  \par
+  \printPart{Institute}{\l__diploma_institute_tl,~\l__diploma_where_tl.}
+  \par
+  \tl_if_empty:NF{ \l__diploma_honor_tl }
+    {\printPart{Honor}{\l__diploma_honor_tl.}}
+  \par
+  \tl_if_empty:NF{ \l__diploma_thesisTitle_tl }
+    {\printPart{Dissertation title}{\l__diploma_thesisTitle_tl.}}
+  \par
+  \clist_if_empty:NF {\l__diploma_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__diploma_description_clist} {\par}}
+  }
+} {Di}
+
+\ExplSyntaxOff
+
+\endinput

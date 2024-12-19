@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2023 by Gaëtan Staquet
+% Copyright (C) 2023-2024 by Gaëtan Staquet
 % -----------------------------------
 %
 % This file may be distributed and/or modified under the
@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-item}{2024/12/15}{v2.0}{Academic curriculum vitae: generic items}
+%<package>\ProvidesExplPackage{academiccv-item}{2024/12/19}{v2.0}{Academic curriculum vitae: generic items}
 
 \ExplSyntaxOn
 
@@ -68,11 +68,15 @@
 %    \end{macrocode}
 % \end{macro}
 
-% \begin{macro}{printPart,printDateRange}
+% \begin{macro}{printPart,printDate,printDateRange}
 %    \begin{macrocode}
 \NewDocumentCommand{ \printPart }{ m +m }{
   \noindent
   \textbf{#1}:~#2
+}
+\NewDocumentCommand{ \printDate }{ m }{
+  \noindent
+  #1
 }
 \NewDocumentCommand{ \printDateRange }{ m m }{
   \noindent
@@ -105,29 +109,37 @@
   { O{} m } {
     \group_begin:
       \keys_set:nn { #1 } { ##2 }
-      \begin{l__#1_env} {##1} {\use:c {l__#1_#3}}
-        #2
-      \end{l__#1_env}
+      \bool_if:cTF {l__#1_numbered_bool} {
+        \begin{l__#1_numbered_env} {##1} {\use:c {l__#1_#3}}
+          #2
+        \end{l__#1_numbered_env}
+      } {
+        \begin{l__#1_env} {##1} {\use:c {l__#1_#3}}
+          #2
+        \end{l__#1_env}
+      }
     \group_end:
   }
 }
-\NewDocumentCommand{\newBox}{ m +m O{title_tl} }{
-  \NewTColorBox{l__#1_env}{ m m }{
-    #1 = {##2},
-    ##1,
-  }
-  \l__declareCommand {#1} {#2} {#3}
-}
-\NewDocumentCommand{\newBoxWithCounter}{ m +m O{title_tl} m }{
+\NewDocumentCommand{\newBox}{ m +m O{title_tl} m }{
   \provideCounter{#1}
+  \bool_new:c {l__#1_numbered_bool}
+  \exp_args:Nc \DeclareDocumentCommand {#1NumberingEnable} {} {\bool_set_true:c {l__#1_numbered_bool}}
+  \exp_args:Nc \DeclareDocumentCommand {#1NumberingDisable} {} {\bool_set_false:c {l__#1_numbered_bool}}
+
   \exp_args:Nc \DeclareDocumentCommand {#1CounterTitle} {} {#4}
   \exp_args:Nc \DeclareDocumentCommand {#1CounterFormat} {} {
     \use:c {#1CounterTitle} \arabic{\tcbcounter}
   }
+
+  \NewTColorBox{l__#1_env}{ m m }{
+    #1 = {##2},
+    ##1,
+  }
   \DeclareTColorBox[
     use~counter = #1,
     number~freestyle = {\use:c {#1CounterFormat} }
-  ]{l__#1_env}{ m m }{
+  ]{l__#1_numbered_env}{ m m }{
     #1 = {##2},
     title = {\thetcbcounter{}:~##2},
     ##1,

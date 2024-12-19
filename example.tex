@@ -87,6 +87,9 @@
 
   \section{Work experience}
 
+  % You can enable numbering of boxes
+  \jobNumberingEnable
+
   \job{
     title = The granddad,
     start = 1963,
@@ -96,7 +99,18 @@
   }
   % Changing the color of the frame also changes the color of the title
   \colorlet{jobframe}{BrickRed}
-  % You can also change the letter appearing before the number of the box
+
+  % Numbering can be disabled, in which case the counter is not incremented
+  \jobNumberingDisable
+  \job{
+    title = The granddad,
+    start = 1963,
+    end = 1966,
+    institute = First body,
+    where = Somewhere,
+  }
+  \jobNumberingEnable
+  % You can also change the letters appearing before the number of the box
   \RenewDocumentCommand{\jobCounterTitle} {} {Work~}
   \job{
     title = The clown,
@@ -122,6 +136,20 @@
     description = {
       {Ungh\dots Shoes, must find my shoes.},
     },
+  }
+
+  \section{Diplomas}
+
+  % As every type of box follows the same principles as "job", I do not showcase how to customize the output
+
+  \diploma{
+    title = Every diploma,
+    date = Too long ago,
+    institute = Timed University,
+    where = Gallifrey,
+    honor = Summa cum laude, % Not required
+    thesis title = {Why? How?}, % Not required
+    description = {I cannot say anything}, % Not required
   }
 
   \iffalse
