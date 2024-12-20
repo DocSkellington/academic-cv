@@ -24,102 +24,45 @@
 
 \ExplSyntaxOn
 
-% \begin{macro}{supervisionSetup}
-%    \begin{macrocode}
-\bool_new:N \l_supervision_swap_bool
-\skip_new:N \l_supervision_margin_skip
-\skip_new:N \l_supervision_space_skip
-\skip_new:N \l_supervision_vspaceAfter_skip
-\tl_new:N \l_supervision_yearStyle_tl
-\tl_new:N \l_supervision_nameStyle_tl
-\tl_new:N \l_supervision_roleStyle_tl
-\tl_new:N \l_supervision_organizationStyle_tl
-\tl_new:N \l_supervision_descriptionStyle_tl
+\colorlet{supervisionframe}{black}
 
-\keys_define:nn {supervisionStyle} {
-  swap          .bool_set:N = \l_supervision_swap_bool,
-  swap          .initial:n = {false},
-  swap          .default:n = {true},
-  margin-size   .skip_set:N = \l_supervision_margin_skip,
-  margin-size   .initial:n = {80pt},
-  space         .skip_set:N = \l_supervision_space_skip,
-  space         .initial:n = {5pt},
-  vspace-after  .skip_set:N = \l_supervision_vspaceAfter_skip,
-  vspace-after  .initial:n = {6pt},
-  year          .tl_set:N = \l_supervision_yearStyle_tl,
-  year          .initial:n = {\bfseries},
-  name          .tl_set:N = \l_supervision_nameStyle_tl,
-  name          .initial:n = {\bfseries},
-  role          .tl_set:N = \l_supervision_roleStyle_tl,
-  role          .initial:n = {\itshape},
-  organization  .tl_set:N = \l_supervision_organizationStyle_tl,
-  organization  .initial:n = {\footnotesize},
-  description   .tl_set:N = \l_supervision_descriptionStyle_tl,
-  description   .initial:n = {\small},
-}
-\NewDocumentCommand{\supervisionSetup}{m}{\keys_set:nn {supervisionStyle} {#1}}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{marginForSupervision}
-%    \begin{macrocode}
-\NewDocumentCommand{\marginForSupervision}{}{
-  \print{supervision}{year}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\mainForSupervision}
-%    \begin{macrocode}
-\NewDocumentCommand{\mainForSupervision}{}{
-  \print{supervision}{name}
-  \print[{\normalfont,~}]{supervision}{role}
-  \print[\\]{supervision}{description}
-  \print[\\]{supervision}{organization}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\job}
-%    \begin{macrocode}
-\tl_new:N \l_supervision_year_tl
-\tl_new:N \l_supervision_name_tl
-\tl_new:N \l_supervision_role_tl
-\tl_new:N \l_supervision_organization_tl
-\tl_new:N \l_supervision_description_tl
-\keys_define:nn {supervision} {
-  year          .tl_set:N = \l_supervision_year_tl,
-  name          .tl_set:N = \l_supervision_name_tl,
-  role          .tl_set:N = \l_supervision_role_tl,
-  organization  .tl_set:N = \l_supervision_organization_tl,
-  description   .tl_set:N = \l_supervision_description_tl,
-  style         .code:n = {
-    \keys_set:nn {supervisionStyle} {#1}
+\tcbset{
+  supervision/.code = {
+    \supervisionTitleColor{supervisionframe}
+    \pgfkeysalso{basic = {supervisionframe}{supervisiontitle}{#1}}
   },
 }
-\NewDocumentCommand{\supervision}{ m }{
-  \group_begin:
-  \keys_set:nn {supervision} {#1}
-  
-  \iftrueTF{supervision}{swap}{
-    \cvitem[
-      swap = true,
-      margin-size = \l_supervision_margin_skip,
-      space = \l_supervision_space_skip,
-      vspace-after = \l_supervision_vspaceAfter_skip,
-    ]{\marginForSupervision}{\mainForSupervision}
-  }{
-    \cvitem[
-      swap = false,
-      margin-size = \l_supervision_margin_skip,
-      space = \l_supervision_space_skip,
-      vspace-after = \l_supervision_vspaceAfter_skip,
-    ]{\marginForSupervision}{\mainForSupervision}
-  }
-  \group_end:
+
+\tl_new:N \l__supervision_title_tl
+\tl_new:N \l__supervision_institute_tl
+\tl_new:N \l__supervision_role_tl
+\tl_new:N \l__supervision_date_tl
+\clist_new:N \l__supervision_description_clist
+\keys_define:nn { supervision } {
+  title.tl_set:N = \l__supervision_title_tl,
+  title.value_required:n = true,
+  institute.tl_set:N = \l__supervision_institute_tl,
+  institute.value_required:n = true,
+  role.tl_set:N = \l__supervision_role_tl,
+  role.initial:V = \c_empty_tl,
+  date.tl_set:N = \l__supervision_date_tl,
+  date.value_required:n = true,
+  description.clist_set:N = \l__supervision_description_clist,
+  description.initial:V = \c_empty_clist,
 }
-%    \end{macrocode}
-% \end{macro}
+
+\newBox {supervision} {
+  \printDate {\l__supervision_date_tl}
+  \par
+  \printPart{Institute}{\l__supervision_institute_tl.}
+  \par
+  \tl_if_empty:NF{ \l__supervision_role_tl }
+    {\printPart{Role}{\l__supervision_role_tl.}}
+  \par
+  \clist_if_empty:NF {\l__supervision_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__supervision_description_clist} {\par}}
+  }
+} {Su}
 
 \ExplSyntaxOff
 
