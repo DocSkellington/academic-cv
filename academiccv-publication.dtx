@@ -70,8 +70,13 @@
   description.initial:V = \c_empty_clist,
 }
 
-% TODO: add [ref] to title
-\newBox {publication} {
+\newBox [
+  title={
+    \bool_if:NT {\l__publication_numbered_bool} {\thetcbcounter{}:~}
+    \tl_if_empty:NF {\l__publication_ref_tl} {[\l__publication_ref_tl]}
+    \l__publication_title_tl
+  }
+] {publication} {
   \printPart{Authors}{\l__publication_authors_tl.}
   \par
   \printPart{Year}{\l__publication_year_tl.}
