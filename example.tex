@@ -155,9 +155,31 @@
   \section{Awards}
 
   \award{
-    date = 2019,
     title = Best paper award for~\ref{paper:goodMan},
+    date = 2019,
     description = {What are you going to do with the people like you?} % Not required
+  }
+
+  \section{Project}
+
+  % Every "description" key (i.e., not just for the project boxes) can accept multiple paragraphs, or uses of environments.
+  % Paragraphs are separated by a comma. To avoid any surprise, I highly recommend enclosing each paragraph between { and }
+
+  \project{
+    title = Sonic Screwdriver,
+    date = 1966, % Not required
+    role = Conceptor,
+    description = { % Not required
+      {It makes noise!},
+      { % Start a new paragraph; beware that whitespaces are not ignored after an {
+        \begin{itemize}
+          \item
+          https://github.com/DocSkellington/academic-cv,
+          \item
+          https://zenodo.org/
+        \end{itemize}
+      },
+    },
   }
 
   \iffalse
@@ -291,41 +313,6 @@
       organization = {\tiny},
       description = {\bfseries},
     },
-  }
-
-  \section{Project}
-
-  \project{
-    shortName = Sonic,
-    name = Sonic Screwdriver,
-    role = Conceptor,
-    description = It makes noise!,
-    homepage = {https://github.com/DocSkellington/academic-cv},
-    artifact = {https://zenodo.org/},
-  }
-
-  \project{
-    shortName = SonicSun,
-    name = Sonic Sunglasses,
-    role = Conceptor,
-    description = It makes noise \emph{and I look cool}!,
-    style = { % use \projectSetup for global settings
-      swap,
-      shortName = {\scshape},
-      name = {\itshape},
-      role = {\color{blue}},
-      description = {\bfseries}
-    }
-  }
-  
-  \project{
-    name = Long description test,
-    description = {Here is an itemize description of this project:
-      \begin{itemize}
-        \item Item number 1
-        \item Item number 2
-      \end{itemize}
-    }
   }
 
   \section{Services (collective and administrative responsibilities)}

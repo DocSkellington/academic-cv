@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2023 by Gaëtan Staquet
+% Copyright (C) 2023-2024 by Gaëtan Staquet
 % -----------------------------------
 %
 % This file may be distributed and/or modified under the
@@ -20,112 +20,47 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-project}{2023/10/15}{v1.1}{Academic curriculum vitae: project}
+%<package>\ProvidesExplPackage{academiccv-project}{2024/12/20}{v2.0}{Academic curriculum vitae: projects}
 
 \ExplSyntaxOn
 
-% \begin{macro}{projectSetup}
-%    \begin{macrocode}
-\bool_new:N \l_project_swap_bool
-\skip_new:N \l_project_margin_skip
-\skip_new:N \l_project_space_skip
-\skip_new:N \l_project_vspaceAfter_skip
-\tl_new:N \l_project_shortNameStyle_tl
-\tl_new:N \l_project_nameStyle_tl
-\tl_new:N \l_project_roleStyle_tl
-\tl_new:N \l_project_homepageStyle_tl
-\tl_new:N \l_project_artifactStyle_tl
-\tl_new:N \l_project_descriptionStyle_tl
+\colorlet{projectframe}{black}
 
-\keys_define:nn {projectStyle} {
-  swap          .bool_set:N = \l_project_swap_bool,
-  swap          .initial:n = {false},
-  swap          .default:n = {true},
-  margin-size   .skip_set:N = \l_project_margin_skip,
-  margin-size   .initial:n = {80pt},
-  space         .skip_set:N = \l_project_space_skip,
-  space         .initial:n = {5pt},
-  vspace-after  .skip_set:N = \l_project_vspaceAfter_skip,
-  vspace-after  .initial:n = {6pt},
-  shortName     .tl_set:N = \l_project_shortNameStyle_tl,
-  shortName     .initial:n = {\bfseries},
-  name          .tl_set:N = \l_project_nameStyle_tl,
-  name          .initial:n = {\bfseries},
-  role          .tl_set:N = \l_project_roleStyle_tl,
-  role          .initial:n = {\normalfont},
-  homepage       .tl_set:N = \l_project_homepageStyle_tl,
-  homepage       .initial:n = {\footnotesize},
-  artifact       .tl_set:N = \l_project_artifactStyle_tl,
-  artifact       .initial:n = {\footnotesize},
-  description   .tl_set:N = \l_project_descriptionStyle_tl,
-  description   .initial:n = {\small},
-}
-\NewDocumentCommand{\projectSetup}{m}{\keys_set:nn {projectStyle} {#1}}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{marginForProject}
-%    \begin{macrocode}
-\NewDocumentCommand{\marginForProject}{}{
-  \print{project}{shortName}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\mainForProject}
-%    \begin{macrocode}
-\NewDocumentCommand{\mainForProject}{}{
-  \print{project}{name}
-  \print[{\normalfont,~}]{project}{role}
-  \print[\\]{project}{description}
-  \printURL[\\Homepage:~]{project}{homepage}{}
-  \printURL[\\Artifact:~]{project}{artifact}{}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\job}
-%    \begin{macrocode}
-\tl_new:N \l_project_shortName_tl
-\tl_new:N \l_project_name_tl
-\tl_new:N \l_project_role_tl
-\tl_new:N \l_project_homepage_tl
-\tl_new:N \l_project_artifact_tl
-\tl_new:N \l_project_description_tl
-\keys_define:nn {project} {
-  shortName     .tl_set:N = \l_project_shortName_tl,
-  name          .tl_set:N = \l_project_name_tl,
-  role          .tl_set:N = \l_project_role_tl,
-  homepage      .tl_set:N = \l_project_homepage_tl,
-  artifact      .tl_set:N = \l_project_artifact_tl,
-  description   .tl_set:N = \l_project_description_tl,
-  style         .code:n = {
-    \keys_set:nn {projectStyle} {#1}
+\tcbset{
+  project/.code = {
+    \projectTitleColor{projectframe}
+    \pgfkeysalso{basic = {projectframe}{projecttitle}{#1}}
   },
 }
-\NewDocumentCommand{\project}{ m }{
-  \group_begin:
-  \keys_set:nn {project} {#1}
-  
-  \iftrueTF{project}{swap}{
-    \cvitem[
-      swap = true,
-      margin-size = \l_project_margin_skip,
-      space = \l_project_space_skip,
-      vspace-after = \l_project_vspaceAfter_skip,
-    ]{\marginForProject}{\mainForProject}
-  }{
-    \cvitem[
-      swap = false,
-      margin-size = \l_project_margin_skip,
-      space = \l_project_space_skip,
-      vspace-after = \l_project_vspaceAfter_skip,
-    ]{\marginForProject}{\mainForProject}
-  }
-  \group_end:
+
+\tl_new:N \l__project_title_tl
+\tl_new:N \l__project_date_tl
+\tl_new:N \l__project_role_tl
+\clist_new:N \l__project_description_clist
+\keys_define:nn { project } {
+  title.tl_set:N = \l__project_title_tl,
+  title.value_required:n = true,
+  date.tl_set:N = \l__project_date_tl,
+  date.initial:V = \c_empty_tl,
+  role.tl_set:N = \l__project_role_tl,
+  role.value_required:n = true,
+  description.clist_set:N = \l__project_description_clist,
+  description.initial:V = \c_empty_clist,
 }
-%    \end{macrocode}
-% \end{macro}
+
+\newBox {project} {
+  \tl_if_empty:NF {\l__project_date_tl} {
+    \printDate {\l__project_date_tl}
+  }
+  \par
+  \tl_if_empty:NF {\l__project_role_tl} {
+    \printPart{Role}{\l__project_role_tl}
+  }
+  \par
+  \clist_if_empty:NF {\l__project_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__project_description_clist} {\par}}
+  }
+} {Pr}
 
 \ExplSyntaxOff
 
