@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-item}{2024/12/19}{v2.0}{Academic curriculum vitae: generic items}
+%<package>\ProvidesExplPackage{academiccv-item}{2024/12/20}{v2.0}{Academic curriculum vitae: generic items}
 
 \ExplSyntaxOn
 
@@ -100,7 +100,7 @@
 
 % \begin{macro}{newBox}
 %    \begin{macrocode}
-\NewDocumentCommand{\l__declareCommand} {m +m m } {
+\NewDocumentCommand{\l__declareCommand} { m +m m } {
   \exp_args:Nc \ProvideDocumentCommand {#1TitleColor} { m } {
     \colorlet{#1title}{basic!30!##1}
   }
@@ -121,30 +121,29 @@
     \group_end:
   }
 }
-\NewDocumentCommand{\newBox}{ m +m O{title_tl} m }{
-  \provideCounter{#1}
-  \bool_new:c {l__#1_numbered_bool}
-  \exp_args:Nc \DeclareDocumentCommand {#1NumberingEnable} {} {\bool_set_true:c {l__#1_numbered_bool}}
-  \exp_args:Nc \DeclareDocumentCommand {#1NumberingDisable} {} {\bool_set_false:c {l__#1_numbered_bool}}
+\NewDocumentCommand{\newBox}{ O{} m +m O{title_tl} m }{
+  \provideCounter{#2}
+  \bool_new:c {l__#2_numbered_bool}
+  \exp_args:Nc \DeclareDocumentCommand {#2NumberingEnable} {} {\bool_set_true:c {l__#2_numbered_bool}}
+  \exp_args:Nc \DeclareDocumentCommand {#2NumberingDisable} {} {\bool_set_false:c {l__#2_numbered_bool}}
 
-  \exp_args:Nc \DeclareDocumentCommand {#1CounterTitle} {} {#4}
-  \exp_args:Nc \DeclareDocumentCommand {#1CounterFormat} {} {
-    \use:c {#1CounterTitle} \arabic{\tcbcounter}
-  }
+  \exp_args:Nc \DeclareDocumentCommand {#2CounterTitle} {} {#5}
+  \exp_args:Nc \DeclareDocumentCommand {#2CounterFormat} {} {\arabic}
 
-  \NewTColorBox{l__#1_env}{ m m }{
-    #1 = {##2},
+  \NewTColorBox{l__#2_env}{ m m }{
+    #2 = {##2},
     ##1,
+    #1,
   }
   \DeclareTColorBox[
-    use~counter = #1,
-    number~freestyle = {\use:c {#1CounterFormat} }
-  ]{l__#1_numbered_env}{ m m }{
-    #1 = {##2},
+    use~counter = #2,
+    number~freestyle = {\use:c {#2CounterTitle} \use:c{#2CounterFormat}{\tcbcounter}}
+  ]{l__#2_numbered_env}{ m m }{
+    #2 = {##2},
     title = {\thetcbcounter{}:~##2},
     ##1,
   }
-  \l__declareCommand {#1} {#2} {#3}
+  \l__declareCommand {#2} {#3} {#4}
 }
 %    \end{macrocode}
 % \end{macro}
