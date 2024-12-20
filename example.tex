@@ -110,7 +110,7 @@
     where = Somewhere,
   }
   \jobNumberingEnable
-  % You can also change the letters appearing before the number of the box
+  % You can also change the symbol appearing before the number of the box
   \RenewDocumentCommand{\jobCounterTitle} {} {Work~}
   \job{
     title = The clown,
@@ -125,8 +125,8 @@
   % You can change how the title color is computed from the color frame
   % This change is not automatically reverted
   \RenewDocumentCommand{\jobTitleColor}{m}{\colorlet{jobtitle}{Blue!60!#1}}
-  % The format used to number a box can be completely modified
-  \RenewDocumentCommand{\jobCounterFormat}{}{\jobCounterTitle\Roman{\tcbcounter}}
+  % The format used to number a box can be modified
+  % \RenewDocumentCommand{\jobCounterFormat}{}{\noexpand\Roman{\tcbcounter}}
   \job{
     title = The exiled,
     start = 1970,
@@ -174,31 +174,38 @@
       { % Start a new paragraph; beware that whitespaces are not ignored after an {
         \begin{itemize}
           \item
-          https://github.com/DocSkellington/academic-cv,
+          \url{https://github.com/DocSkellington/academic-cv},
           \item
-          https://zenodo.org/
+          \url{https://zenodo.org/}
         \end{itemize}
       },
     },
   }
 
-  \iffalse
   \section{Publications}
 
   \subsection{Published}
 
-  \publication{
+  \publicationNumberingEnable
+
+  Test~\ref{paper:goodMan} % Numbering is wrong!
+
+  \publication[
+    label = paper:goodMan, % Boxes can be labeled
+  ]{
     title = {Am I a Good Man?},
     authors = {John Who, P.C.},
     reference = {WC23},
-    where = {Dreaming Inside, Youth edition},
-    shortWhere = {DIY},
+    conference = {Dreaming Inside, Youth edition (DIY)},
     year = {2019},
     doi = {00.0000/000-0-000-00000-00},
     arxiv = {00.00000/arXiv.0000.00000},
-    note = {Won Best Paper Award}
+    award = {Won Best Paper Award},
   }
 
+  Test~\ref{paper:goodMan}
+
+  \iffalse
   % It is possible to change the setup in the middle of the document.
   % The changes will only impact *all* the publications that come after
   \publicationSetup{

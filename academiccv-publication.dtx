@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2023 by Gaëtan Staquet
+% Copyright (C) 2023-2024 by Gaëtan Staquet
 % -----------------------------------
 %
 % This file may be distributed and/or modified under the
@@ -20,133 +20,85 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-publication}{2024/05/15}{v1.1}{Academic curriculum vitae: publications}
+%<package>\ProvidesExplPackage{academiccv-publication}{2024/12/20}{v2.0}{Academic curriculum vitae: publications}
 
 \ExplSyntaxOn
 
-% \begin{macro}{\publicationSetup}
-%    \begin{macrocode}
-\tl_new:N \l_publication_refStyle_tl
-\tl_new:N \l_publication_titleStyle_tl
-\tl_new:N \l_publication_authorsStyle_tl
-\tl_new:N \l_publication_whereStyle_tl
-\tl_new:N \l_publication_shortWhereStyle_tl
-\tl_new:N \l_publication_yearStyle_tl
-\tl_new:N \l_publication_doiStyle_tl
-\tl_new:N \l_publication_doiPrefix_tl
-\tl_new:N \l_publication_arxivStyle_tl
-\tl_new:N \l_publication_arxivPrefix_tl
-\tl_new:N \l_publication_noteStyle_tl
+\colorlet{publicationframe}{black}
 
-\keys_define:nn {publicationStyle} {
-  title         .tl_set:N = \l_publication_titleStyle_tl,
-  title         .initial:n = {\normalfont\bfseries\large},
-  authors       .tl_set:N = \l_publication_authorsStyle_tl,
-  authors       .initial:n = {\normalfont},
-  year          .tl_set:N = \l_publication_yearStyle_tl,
-  year          .initial:n = {\normalfont},
-  reference     .tl_set:N = \l_publication_refStyle_tl,
-  reference     .initial:n = {\bfseries},
-  where         .tl_set:N = \l_publication_whereStyle_tl,
-  where         .initial:n = {\itshape},
-  shortWhere    .tl_set:N = \l_publication_shortWhereStyle_tl,
-  shortWhere    .initial:n = {\itshape},
-  doi           .tl_set:N = \l_publication_doiStyle_tl,
-  doi           .initial:n = {\normalfont},
-  doi-prefix    .tl_set:N = \l_publication_doiPrefix_tl,
-  doi-prefix    .initial:n = {DOI:~},
-  arxiv         .tl_set:N = \l_publication_arxivStyle_tl,
-  arxiv         .initial:n = {\normalfont},
-  arxiv-prefix  .tl_set:N = \l_publication_arxivPrefix_tl,
-  arxiv-prefix  .initial:n = {arXiv:~},
-  note          .tl_set:N = \l_publication_noteStyle_tl,
-  note          .initial:n = {\normalfont},
-}
-\NewDocumentCommand{\publicationSetup}{m}{\keys_set:nn {publicationStyle} {#1}}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\printPublication}
-%    \begin{macrocode}
-\NewDocumentCommand{\printPublication}{}{
-  \par\noindent
-  \print[{[}]{publication}{ref}[{]}\ ]
-  \print{publication}{title}[.] ~
-  \print{publication}{authors}[.] ~
-  \ifemptyTF{publication}{where}{
-    \ifemptyTF{publication}{shortWhere}{
-    }{
-      \print{publication}{shortWhere}[,] ~
-    }
-  }{
-    \ifemptyTF{publication}{shortWhere}{
-      \print{publication}{where}[,]
-    }{
-      \print{publication}{where} ~
-      \print[(]{publication}{shortWhere}[),]
-    } ~
-  }
-  \print{publication}{year}[.]
-  \printURL[~\l_publication_doiPrefix_tl]{publication}{doi}{https\c_colon_str//doi.org/}[.]
-  \printURL[~\l_publication_arxivPrefix_tl]{publication}{arxiv}{https\c_colon_str//doi.org/}[.]
-  \print[~]{publication}{note}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\publication}
-%    \begin{macrocode}
-\tl_new:N \l_publication_title_tl
-\tl_new:N \l_publication_authors_tl
-\tl_new:N \l_publication_year_tl
-\tl_new:N \l_publication_ref_tl
-\tl_new:N \l_publication_where_tl
-\tl_new:N \l_publication_shortWhere_tl
-\tl_new:N \l_publication_doi_tl
-\tl_new:N \l_publication_arxiv_tl
-\tl_new:N \l_publication_note_tl
-\keys_define:nn {publication} {
-  title         .tl_set:N = \l_publication_title_tl,
-  authors       .tl_set:N = \l_publication_authors_tl,
-  year          .tl_set:N = \l_publication_year_tl,
-  reference     .tl_set:N = \l_publication_ref_tl,
-  where         .tl_set:N = \l_publication_where_tl,
-  shortWhere    .tl_set:N = \l_publication_shortWhere_tl,
-  doi           .tl_set:N = \l_publication_doi_tl,
-  arxiv         .tl_set:N = \l_publication_arxiv_tl,
-  note          .tl_set:N = \l_publication_note_tl,
-  style         .code:n = {
-    \keys_set:nn {publicationStyle} {#1}
+\tcbset{
+  publication/.code = {
+    \publicationTitleColor{publicationframe}
+    \pgfkeysalso{basic = {publicationframe}{publicationtitle}{#1}}
   },
 }
-\msg_new:nnn {academiccv} {publication / emptyTitle}
-  { Publication:~the~title~can~not~be~empty. }
-\msg_new:nnn {academiccv} {publication / emptyAuthors}
-  { Publication:~the~authors~can~not~be~empty. }
-\msg_new:nnn {academiccv} {publication / emptyYear}
-  { Publication:~the~year~can~not~be~empty. }
-\NewDocumentCommand{\publication}{m}{
-  \group_begin:
-  % Parsing arguments
-  \keys_set:nn {publication} {#1}
 
-  % Sanity
-  \ifemptyTF{publication}{title}{
-    \msg_fatal:nn{academiccv}{publication / emptyTitle}
-  }{}
-  \ifemptyTF{publication}{authors}{
-    \msg_fatal:nn{academiccv}{publication / emptyAuthors}
-  }{}
-  \ifemptyTF{publication}{year}{
-    \msg_fatal:nn{academiccv}{publication / emptyYear}
-  }{}
+\tl_new:N \l__publication_ref_tl
+\tl_new:N \l__publication_title_tl
+\tl_new:N \l__publication_authors_tl
+\tl_new:N \l__publication_year_tl
+\tl_new:N \l__publication_conference_tl
+\tl_new:N \l__publication_core_tl
+\tl_new:N \l__publication_pages_tl
+\tl_new:N \l__publication_doi_tl
+\tl_new:N \l__publication_arxiv_tl
+\tl_new:N \l__publication_award_tl
+\clist_new:N \l__publication_description_clist
 
-  % Typesetting
-  \printPublication
-  \group_end:
+\keys_define:nn { publication } {
+  title.tl_set:N = \l__publication_title_tl,
+  title.value_required:n = true,
+  reference.tl_set:N = \l__publication_ref_tl,
+  reference.initial:V = \c_empty_tl,
+  authors.tl_set:N = \l__publication_authors_tl,
+  authors.value_required:n = true,
+  year.tl_set:N = \l__publication_year_tl,
+  year.value_required:n = true,
+  conference.tl_set:N = \l__publication_conference_tl,
+  conference.value_required:n = true,
+  core.tl_set:N = \l__publication_core_tl,
+  core.initial:V = \c_empty_tl,
+  pages.tl_set:N = \l__publication_pages_tl,
+  pages.initial:V = \c_empty_tl,
+  doi.tl_set:N = \l__publication_doi_tl,
+  doi.initial:V = \c_empty_tl,
+  arxiv.tl_set:N = \l__publication_arxiv_tl,
+  arxiv.initial:V = \c_empty_tl,
+  award.tl_set:N = \l__publication_award_tl,
+  award.initial:V = \c_empty_tl,
+  description.clist_set:N = \l__publication_description_clist,
+  description.initial:V = \c_empty_clist,
 }
-%    \end{macrocode}
-% \end{macro}
+
+% TODO: add [ref] to title
+\newBox {publication} {
+  \printPart{Authors}{\l__publication_authors_tl.}
+  \par
+  \printPart{Year}{\l__publication_year_tl.}
+  \par
+  \printPart{Conference}{\l__publication_conference_tl}
+  \tl_if_empty:NF {\l__publication_core_tl} {~(CORE~ranking:~\l__publication_core_tl)}.
+  \par
+  \tl_if_empty:NF {\l__publication_pages_tl} {
+    \printPart{Pages}{\l__publication_pages_tl.}
+  }
+  \par
+  \tl_if_empty:NF {\l__publication_doi_tl} {
+    \printPart{DOI}{\l__publication_doi_tl.}
+  }
+  \par
+  \tl_if_empty:NF {\l__publication_arxiv_tl} {
+    \printPart{arXiv}{\l__publication_arxiv_tl.}
+  }
+  \par
+  \tl_if_empty:NF {\l__publication_award_tl} {
+    \printPart{Award}{\l__publication_award_tl.}
+  }
+  \par
+  \clist_if_empty:NF {\l__publication_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__publication_description_clist} {\par}}
+  }
+} {Pu}
 
 \ExplSyntaxOff
 
