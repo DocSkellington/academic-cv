@@ -247,32 +247,20 @@
     }
   }
 
-  \iffalse
   \section{CV Items}
   
   In case the modules do not cover one of your needs, you can use generic CV items.
 
-  \cvitem{Margin}{Simple content}
+  \cvitem{Title of the box}{
+    Content of the box.
 
-  \cvitem[
-    margin={\bfseries},
-    main={\scshape},
-  ]{
-    Margin\\
-    {\small Smaller margin}
-  }{
-    Content\\
-    {\small Some smaller text}
+    This can span multiple paragraphs, or even use environments.
   }
 
-  \cvitem[swap]{Margin}{Simple content}
-
-  \cvitem[swap]{
-    Margin\\
-    {\small Smaller margin}
-  }{
-    Content\\
-    {\small Some smaller text}
+  \cvitem[red][green]{Title of the box}{
+    \begin{itemize}
+      \item
+      Content of the box.
+    \end{itemize}
   }
-  \fi
 \end{document}
