@@ -1,6 +1,6 @@
 % \iffalse meta-comment
 %
-% Copyright (C) 2023 by Gaëtan Staquet
+% Copyright (C) 2023-2024 by Gaëtan Staquet
 % -----------------------------------
 %
 % This file may be distributed and/or modified under the
@@ -20,112 +20,53 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-teach}{2023/08/26}{v1.0}{Academic curriculum vitae: teaching}
+%<package>\ProvidesExplPackage{academiccv-teach}{2024/12/20}{v2.0}{Academic curriculum vitae: teaching}
 
 \ExplSyntaxOn
 
-% \begin{macro}{teachSetup}
-%    \begin{macrocode}
-\bool_new:N \l_teach_swap_bool
-\skip_new:N \l_teach_margin_skip
-\skip_new:N \l_teach_space_skip
-\skip_new:N \l_teach_vspaceAfter_skip
-\tl_new:N \l_teach_yearStyle_tl
-\tl_new:N \l_teach_courseStyle_tl
-\tl_new:N \l_teach_roleStyle_tl
-\tl_new:N \l_teach_levelStyle_tl
-\tl_new:N \l_teach_organizationStyle_tl
-\tl_new:N \l_teach_descriptionStyle_tl
+\colorlet{teachingframe}{black}
 
-\keys_define:nn {teachStyle} {
-  swap          .bool_set:N = \l_teach_swap_bool,
-  swap          .initial:n = {false},
-  swap          .default:n = {true},
-  margin-size   .skip_set:N = \l_teach_margin_skip,
-  margin-size   .initial:n = {80pt},
-  space         .skip_set:N = \l_teach_space_skip,
-  space         .initial:n = {5pt},
-  vspace-after  .skip_set:N = \l_teach_vspaceAfter_skip,
-  vspace-after  .initial:n = {6pt},
-  year          .tl_set:N = \l_teach_yearStyle_tl,
-  year          .initial:n = {\bfseries},
-  course        .tl_set:N = \l_teach_courseStyle_tl,
-  course        .initial:n = {\bfseries},
-  role          .tl_set:N = \l_teach_roleStyle_tl,
-  role          .initial:n = {\itshape},
-  level         .tl_set:N = \l_teach_levelStyle_tl,
-  level         .initial:n = {\normalfont},
-  organization  .tl_set:N = \l_teach_organizationStyle_tl,
-  organization  .initial:n = {\footnotesize},
-  description   .tl_set:N = \l_teach_descriptionStyle_tl,
-  description   .initial:n = {\small},
-}
-\NewDocumentCommand{\teachSetup}{m}{\keys_set:nn {teachStyle} {#1}}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{marginForTeach}
-%    \begin{macrocode}
-\NewDocumentCommand{\marginForTeach}{}{
-  \print{teach}{year}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\mainForTeach}
-%    \begin{macrocode}
-\NewDocumentCommand{\mainForTeach}{}{
-  \print{teach}{course}
-  \print[{\normalfont,~}]{teach}{level}
-  \print[{\normalfont,~}]{teach}{role}
-  \print[\\]{teach}{description}
-  \print[\\]{teach}{organization}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\job}
-%    \begin{macrocode}
-\tl_new:N \l_teach_year_tl
-\tl_new:N \l_teach_course_tl
-\tl_new:N \l_teach_role_tl
-\tl_new:N \l_teach_level_tl
-\tl_new:N \l_teach_organization_tl
-\tl_new:N \l_teach_description_tl
-\keys_define:nn {teach} {
-  year          .tl_set:N = \l_teach_year_tl,
-  course        .tl_set:N = \l_teach_course_tl,
-  role          .tl_set:N = \l_teach_role_tl,
-  level         .tl_set:N = \l_teach_level_tl,
-  organization  .tl_set:N = \l_teach_organization_tl,
-  description   .tl_set:N = \l_teach_description_tl,
-  style         .code:n = {
-    \keys_set:nn {teachStyle} {#1}
+\tcbset{
+  teaching/.code = {
+    \teachingTitleColor{teachingframe}
+    \pgfkeysalso{basic = {teachingframe}{teachingtitle}{#1}}
   },
 }
-\NewDocumentCommand{\teach}{ m }{
-  \group_begin:
-  \keys_set:nn {teach} {#1}
-  
-  \iftrueTF{teach}{swap}{
-    \cvitem[
-      swap = true,
-      margin-size = \l_teach_margin_skip,
-      space = \l_teach_space_skip,
-      vspace-after = \l_teach_vspaceAfter_skip,
-    ]{\marginForTeach}{\mainForTeach}
-  }{
-    \cvitem[
-      swap = false,
-      margin-size = \l_teach_margin_skip,
-      space = \l_teach_space_skip,
-      vspace-after = \l_teach_vspaceAfter_skip,
-    ]{\marginForTeach}{\mainForTeach}
-  }
-  \group_end:
+
+\tl_new:N \l__teaching_title_tl
+\tl_new:N \l__teaching_institute_tl
+\tl_new:N \l__teaching_year_tl
+\tl_new:N \l__teaching_level_tl
+\tl_new:N \l__teaching_role_tl
+\clist_new:N \l__teaching_description_clist
+\keys_define:nn { teaching } {
+  title.tl_set:N = \l__teaching_title_tl,
+  title.value_required:n = true,
+  institute.tl_set:N = \l__teaching_institute_tl,
+  institute.value_required:n = true,
+  year.tl_set:N = \l__teaching_year_tl,
+  year.value_required:n = true,
+  level.tl_set:N = \l__teaching_level_tl,
+  level.value_required:n = true,
+  role.tl_set:N = \l__teaching_role_tl,
+  role.value_required:n = true,
+  description.clist_set:N = \l__teaching_description_clist,
+  description.initial:V = \c_empty_clist,
 }
-%    \end{macrocode}
-% \end{macro}
+
+\newBox {teaching} {
+  \printDate {\l__teaching_year_tl}
+  \par
+  \printPart{Institute}{\l__teaching_institute_tl.}
+  \par
+  \printPart{Student~level}{\l__teaching_level_tl.}
+  \par
+  \printPart{Role}{\l__teaching_role_tl.}
+  \par
+  \clist_if_empty:NF {\l__teaching_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__teaching_description_clist} {\par}}
+  }
+} {Te}
 
 \ExplSyntaxOff
 
