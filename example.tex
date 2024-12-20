@@ -97,9 +97,9 @@
     institute = First body,
     where = Somewhere,
   }
+
   % Changing the color of the frame also changes the color of the title
   \colorlet{jobframe}{BrickRed}
-
   % Numbering can be disabled, in which case the counter is not incremented
   \jobNumberingDisable
   \job{
@@ -109,9 +109,10 @@
     institute = First body,
     where = Somewhere,
   }
-  \jobNumberingEnable
-  % You can also change the symbol appearing before the number of the box
-  \RenewDocumentCommand{\jobCounterTitle} {} {Work~}
+
+  % You can change how the title color is computed from the color frame
+  % This change is not automatically reverted
+  \RenewDocumentCommand{\jobTitleColor}{m}{\colorlet{jobtitle}{Blue!60!#1}}
   \job{
     title = The clown,
     start = 1966,
@@ -122,11 +123,10 @@
       {Stop, you're making me giddy!},
     },
   }
-  % You can change how the title color is computed from the color frame
-  % This change is not automatically reverted
-  \RenewDocumentCommand{\jobTitleColor}{m}{\colorlet{jobtitle}{Blue!60!#1}}
-  % The format used to number a box can be modified
-  % \RenewDocumentCommand{\jobCounterFormat}{}{\noexpand\Roman{\tcbcounter}}
+
+  \jobNumberingEnable
+  % You can also change the symbol appearing before the number of the box
+  \RenewDocumentCommand{\jobCounterTitle} {} {Work~}
   \job{
     title = The exiled,
     start = 1970,
@@ -134,7 +134,7 @@
     institute = Third body,
     where = Somewhere,
     description = {
-      {Ungh\dots Shoes, must find my shoes.},
+      {Ungh\ldots{} Shoes, must find my shoes.},
     },
   }
 
@@ -193,12 +193,19 @@
   ]{
     title = {Am I a Good Man?},
     authors = {John Who, P.C.},
-    reference = {WC19},
-    conference = {Dreaming Inside, Youth edition (DIY)},
     year = {2019},
-    doi = {00.0000/000-0-000-00000-00},
-    arxiv = {00.00000/arXiv.0000.00000},
-    award = {Won Best Paper Award},
+    reference = {WC19}, % Not required
+    conference = {Dreaming Inside, Youth edition (DIY)}, % Not required
+    core = {A}, % Not required; will not be used if conference is not given
+    doi = {00.0000/000-0-000-00000-00}, % Not required
+    arxiv = {00.00000/arXiv.0000.00000}, % Not required
+    award = {Won Best Paper Award}, % Not required
+  }
+
+  \publication{
+    title = {Exterminate!},
+    authors = {Supreme Davros},
+    year = {8743},
   }
 
   \iffalse
@@ -217,18 +224,6 @@
     authors = {John Who},
     year = {2954},
     doi = {00.0000/000-0-000-00000-00},
-  }
-
-  \subsection{Preprints}
-  \publication{
-    title = {Exterminate!},
-    authors = {Supreme Davros},
-    year = {8743},
-    arxiv = {0000},
-    style = {  % It is possible to override the style for one specific publication
-      title = {\scshape},
-      arxiv-prefix = {ARXIV:\ },
-    },
   }
 
   % If a publication overwrites some style variables, they are restored to their

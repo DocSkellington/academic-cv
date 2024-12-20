@@ -55,7 +55,7 @@
   year.tl_set:N = \l__publication_year_tl,
   year.value_required:n = true,
   conference.tl_set:N = \l__publication_conference_tl,
-  conference.value_required:n = true,
+  conference.initial:V = \c_empty_tl,
   core.tl_set:N = \l__publication_core_tl,
   core.initial:V = \c_empty_tl,
   pages.tl_set:N = \l__publication_pages_tl,
@@ -81,8 +81,10 @@
   \par
   \printPart{Year}{\l__publication_year_tl.}
   \par
-  \printPart{Conference}{\l__publication_conference_tl}
-  \tl_if_empty:NF {\l__publication_core_tl} {~(CORE~ranking:~\l__publication_core_tl)}.
+  \tl_if_empty:NF {\l__publication_conference_tl} {
+    \printPart{Conference}{\l__publication_conference_tl}
+    \tl_if_empty:NF {\l__publication_core_tl} {~(CORE~ranking:~\l__publication_core_tl)}.
+  }
   \par
   \tl_if_empty:NF {\l__publication_pages_tl} {
     \printPart{Pages}{\l__publication_pages_tl.}
