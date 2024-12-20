@@ -20,88 +20,38 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-service}{2024/04/02}{v1.0}{Academic curriculum vitae: service}
+%<package>\ProvidesExplPackage{academiccv-service}{2024/12/20}{v2.0}{Academic curriculum vitae: service}
 
 \ExplSyntaxOn
 
-% \begin{macro}{serviceSetup}
-%    \begin{macrocode}
-\bool_new:N \l_service_swap_bool
-\skip_new:N \l_service_margin_skip
-\skip_new:N \l_service_space_skip
-\skip_new:N \l_service_vspaceAfter_skip
-\tl_new:N \l_service_yearStyle_tl
-\tl_new:N \l_service_descriptionStyle_tl
+\colorlet{serviceframe}{black}
 
-\keys_define:nn {serviceStyle} {
-  swap          .bool_set:N = \l_service_swap_bool,
-  swap          .initial:n = {false},
-  swap          .default:n = {true},
-  margin-size   .skip_set:N = \l_service_margin_skip,
-  margin-size   .initial:n = {80pt},
-  space         .skip_set:N = \l_service_space_skip,
-  space         .initial:n = {5pt},
-  vspace-after  .skip_set:N = \l_service_vspaceAfter_skip,
-  vspace-after  .initial:n = {6pt},
-  year          .tl_set:N = \l_service_yearStyle_tl,
-  year          .initial:n = {\bfseries},
-  description   .tl_set:N = \l_service_descriptionStyle_tl,
-  description   .initial:n = {\normalfont},
-}
-\NewDocumentCommand{\serviceSetup}{m}{\keys_set:nn {serviceStyle} {#1}}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{marginForService}
-%    \begin{macrocode}
-\NewDocumentCommand{\marginForService}{}{
-  \print{service}{year}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\mainForService}
-%    \begin{macrocode}
-\NewDocumentCommand{\mainForService}{}{
-  \print{service}{description}
-}
-%    \end{macrocode}
-% \end{macro}
-
-% \begin{macro}{\service}
-%    \begin{macrocode}
-\tl_new:N \l_service_year_tl
-\tl_new:N \l_service_description_tl
-\keys_define:nn {service} {
-  year          .tl_set:N = \l_service_year_tl,
-  description   .tl_set:N = \l_service_description_tl,
-  style         .code:n = {
-    \keys_set:nn {serviceStyle} {#1}
+\tcbset{
+  service/.code = {
+    \serviceTitleColor{serviceframe}
+    \pgfkeysalso{basic = {serviceframe}{servicetitle}{#1}}
   },
 }
-\NewDocumentCommand{\service}{ m }{
-  \group_begin:
-  \keys_set:nn {service} {#1}
-  
-  \iftrueTF{service}{swap}{
-    \cvitem[
-      swap = true,
-      margin-size = \l_service_margin_skip,
-      space = \l_service_space_skip,
-      vspace-after = \l_service_vspaceAfter_skip,
-    ]{\marginForService}{\mainForService}
-  }{
-    \cvitem[
-      swap = false,
-      margin-size = \l_service_margin_skip,
-      space = \l_service_space_skip,
-      vspace-after = \l_service_vspaceAfter_skip,
-    ]{\marginForService}{\mainForService}
-  }
-  \group_end:
+
+\tl_new:N \l__service_title_tl
+\tl_new:N \l__service_date_tl
+\clist_new:N \l__service_description_clist
+\keys_define:nn { service } {
+  title.tl_set:N = \l__service_title_tl,
+  title.value_required:n = true,
+  date.tl_set:N = \l__service_date_tl,
+  date.value_required:n = true,
+  description.clist_set:N = \l__service_description_clist,
+  description.initial:V = \c_empty_clist,
 }
-%    \end{macrocode}
-% \end{macro}
+
+\newBox {service} {
+  \printDate {\l__service_date_tl}
+  \par
+  \clist_if_empty:NF {\l__service_description_clist} {
+    \printPart{Description}{\clist_use:Nn {\l__service_description_clist} {\par}}
+  }
+} {Se}
 
 \ExplSyntaxOff
 
