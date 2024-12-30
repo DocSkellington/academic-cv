@@ -20,7 +20,7 @@
 \ProvidesFile{\jobname.dtx}
 %</driver>
 %<package>\NeedsTeXFormat{LaTeX2e}
-%<package>\ProvidesExplPackage{academiccv-diploma}{2024/12/19}{v2.0}{Academic curriculum vitae: diplomas}
+%<package>\ProvidesExplPackage{academiccv-diploma}{2024/12/30}{v2.0}{Academic curriculum vitae: diplomas}
 
 \ExplSyntaxOn
 
@@ -40,7 +40,6 @@
 \clist_new:N \l__diploma_description_clist
 \tl_new:N \l__diploma_honor_tl
 \tl_new:N \l__diploma_thesisTitle_tl
-\tl_new:N \l__diploma_thesisTitleFR_tl
 \keys_define:nn { diploma } {
   title.tl_set:N = \l__diploma_title_tl,
   title.value_required:n = true,
@@ -67,7 +66,7 @@
     {\printPart{Honor}{\l__diploma_honor_tl.}}
   \par
   \tl_if_empty:NF{ \l__diploma_thesisTitle_tl }
-    {\printPart{Dissertation title}{\l__diploma_thesisTitle_tl.}}
+    {\printPart{Dissertation~title}{\l__diploma_thesisTitle_tl.}}
   \par
   \clist_if_empty:NF {\l__diploma_description_clist} {
     \printPart{Description}{\clist_use:Nn {\l__diploma_description_clist} {\par}}
